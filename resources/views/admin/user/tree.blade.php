@@ -46,9 +46,23 @@
                                     <div class="mgt-item">
                                         @foreach($users as $user)
                                         <div @if(count($user->allChildren)>0) class="mgt-item-parent" @else class="mgt-item-lastparent" @endif>
+
                                             <div class="person">
                                                 <img src="{{$user->getImageUrlAttribute($user->id)}}" alt="{{$user->name}}">
-                                                <p class="name">{{$user->name}} / {{$user->position}}</p>
+
+                                                <p class="name">
+                                                    @if(isset($user->attendance_creator[0]))
+                                                        @if($user->attendance_creator[0]->status=='punch_in')
+                                                            <span style="color:green;"><i class="fas fa-circle"></i></span>
+                                                        @else 
+                                                            <span style="color:red;"><i class="fas fa-circle"></i></span>
+                                                        @endif
+                                                    @else 
+                                                        <span style="color:red;"><i class="fas fa-circle"></i></span>
+                                                    @endif
+                                                    {{$user->name}} / {{$user->position}}
+                                                </p>
+
                                             </div>
                                         </div>
                                         @if(count($user->allChildren)>0)
