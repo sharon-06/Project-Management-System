@@ -207,6 +207,16 @@ class UserController extends Controller
     public function tree()
     {
           $users = User::with('allChildren')->where('parent_id',null)->get();
+
+          //dd($users);
+          return view('admin.user.tree', compact('users'));
+    }
+
+    public function tree_temp()
+    {
+          $users = User::with('allChildren')->where('parent_id',null)->get();
+
+          //dd($users);
           return view('admin.user.tree', compact('users'));
     }
 

@@ -65,6 +65,8 @@ Route::group([
 
     // User Routes
     Route::get( 'user-treeview', 'UserController@tree' )->name('user-treeview'); // Get user option by 
+
+    Route::get( 'user-treeview-temp', 'UserController@tree_temp' )->name('user-treeview-temp'); // Get user option by 
     Route::resource('/user', 'UserController');
     Route::post( 'user/ajax/users', 'UserController@get_users_by_branch' )->name('user.ajax.users'); // Get user option by branch in ajax
 
