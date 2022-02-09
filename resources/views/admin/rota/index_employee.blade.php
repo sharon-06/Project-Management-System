@@ -233,7 +233,15 @@ $(document).ready(function () {
                 var branch = 'Remotely Work';
             }
 
-            return $('<div class="user-add-shedule-list"><h2><div class="anchertag" style="border:2px dashed #1eb53a;width: 120px;margin: 0 0 0 10px;""><span class="username-info">'+ moment( event.start, true).format("YYYY-MM-DD") +' '+ event.start_time +' To</span><span class="username-info m-b-10"></span><span class="username-info m-b-10">' + event.end_date +' '+ event.end_time +'</span><br><span class="username-info m-b-10">Brake Time : '+ break_time +'</span><br><span class="username-info m-b-10">'+branch+'</span> </div></h2></div>');
+            var edit = '';
+            var edit_permission = "{{auth()->user()->can('edit rota')}}";
+            if (edit_permission==true){
+                var edit_url = "{{ route('admin.rota.edit', ":id") }}";
+                edit_url = edit_url.replace(':id', event.id);
+                edit +="<a href='"+edit_url+"' style='float: right;'  id='popup-modal-button'><span tooltip='Edit' flow='right'><i class='fas fa-edit'></i></span></a>";
+            }
+
+            return $('<div class="user-add-shedule-list" style="margin: -35px 0 15px 0px;"><h2><div class="anchertag" style="border:2px dashed #1eb53a;width: 120px;margin: 35px 0 0 10px;"">'+edit+'<span class="username-info mt-4">'+ moment( event.start, true).format("YYYY-MM-DD") +' '+ event.start_time +' To</span><span class="username-info m-b-10"></span><span class="username-info m-b-10">' + event.end_date +' '+ event.end_time +'</span><br><span class="username-info m-b-10">Brake Time : '+ break_time +'</span><br><span class="username-info m-b-10">'+branch+'</span> </div></h2></div>');
         },
     });
 });
