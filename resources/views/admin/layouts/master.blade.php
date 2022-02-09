@@ -175,7 +175,7 @@ if (!(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' ||
         <!-- /.content-wrapper -->
 
         <!-- .model-popup [START] -->
-        <div class="modal fade" id="popup-modal" tabindex="-1" role="dialog">
+        <div class="modal fade" id="popup-modal" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div id="popup-modal-body" class="modal-body">
@@ -186,7 +186,7 @@ if (!(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' ||
         <!-- .model-popup [END] -->
 
         <!-- .model-popup User & Role [START] -->
-        <div class="modal fade" id="popup-modalUserRole" tabindex="-1" role="dialog">
+        <div class="modal fade" id="popup-modalUserRole" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div id="popup-modal-bodyUserRole" class="modal-body">
