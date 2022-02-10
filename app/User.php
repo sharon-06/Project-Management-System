@@ -114,6 +114,10 @@ class User extends Authenticatable
         return $this->hasMany(Attendance::class,'created_by')->with('branch','punch_out');
     }
 
+    public function latest_attendance_creator() {
+        return $this->hasOne(Attendance::class,'created_by')->with('branch','punch_out')->latest();
+    }
+
     /**
      * Get the last editor of this attendance with branch.
      */

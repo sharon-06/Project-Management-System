@@ -206,22 +206,9 @@ class UserController extends Controller
      */
     public function tree()
     {
-          $users = User::with(['allChildren',"attendance_creator" => function($q){
-                                $q->latest('attendance_at')->take(1);
-                            }])->where('parent_id',null)->get();
+          $users = User::with(['allChildren',"latest_attendance_creator"])->where('parent_id',null)->get();
 
           //dd($users);
           return view('admin.user.tree', compact('users'));
     }
-
-    public function tree_temp()
-    {
-          $users = User::with(['allChildren',"attendance_creator" => function($q){
-                                $q->latest('attendance_at')->take(1);
-                            }])->where('parent_id',null)->get();
-
-          return view('admin.user.tree', compact('users'));
-    }
-
-    
 }

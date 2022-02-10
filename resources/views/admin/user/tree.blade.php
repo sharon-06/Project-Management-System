@@ -51,8 +51,8 @@
                                                 <img src="{{$user->getImageUrlAttribute($user->id)}}" alt="{{$user->name}}">
 
                                                 <p class="name">
-                                                    @if(isset($user->attendance_creator[0]))
-                                                        @if($user->attendance_creator[0]->status=='punch_in')
+                                                    @if(isset($user->latest_attendance_creator))
+                                                        @if($user->latest_attendance_creator->status=='punch_in')
                                                             <span style="color:green;"><i class="fas fa-circle"></i></span>
                                                         @else 
                                                             <span style="color:red;"><i class="fas fa-circle"></i></span>

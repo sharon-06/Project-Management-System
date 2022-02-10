@@ -5,8 +5,8 @@
             <div class="person">
                 <img src="{{$child_user->getImageUrlAttribute($child_user->id)}}" alt="{{$child_user->name}}"/>
                 <p class="name">
-                    @if(isset($child_user->attendance_creator[0]))
-                        @if($child_user->attendance_creator[0]->status=='punch_in')
+                    @if(isset($child_user->latest_attendance_creator))
+                        @if($child_user->latest_attendance_creator->status=='punch_in')
                             <span style="color:green;"><i class="fas fa-circle"></i></span>
                         @else 
                             <span style="color:red;"><i class="fas fa-circle"></i></span>
