@@ -105,7 +105,7 @@
                                         <p>Wiki Edit</p>
                                     </a>
                                 </li>
-                                @endcan  
+                                @endcan 
                             </ul>
                         </li>
                         @endif
@@ -221,6 +221,15 @@
                             </a>
                         </li>
                         @endif
+
+                        @can('view Task')
+                        <li class="nav-item">
+                            <a href="{{ url('admin/task') }}" class="nav-link {{ Route::is('admin.task.*')  ? 'active' : '' }}">
+                                <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
+                                <p>Task</p>
+                            </a>
+                        </li>
+                        @endcan  
                     </ul>
                 </li>
                 

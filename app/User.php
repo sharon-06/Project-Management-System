@@ -197,4 +197,12 @@ class User extends Authenticatable
         return $this->children()->with('allChildren');
     }
 
+    /**
+     * The task that belong to the user.
+     */
+    public function tasks()
+    {
+        return $this->belongsToMany(tasks::class, 'User_has_tasks', 'user_id', 'task_id');
+    }
+
 }

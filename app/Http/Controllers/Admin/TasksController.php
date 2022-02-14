@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\tasks;
+use App\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskStoreRequest;
 use App\Http\Requests\TaskUpdateRequest;
@@ -81,7 +82,15 @@ class TasksController extends Controller
     public function create()
     {
         $tasks = tasks::all();
-        return view('admin.task.create', compact("tasks"));
+
+        if(!auth()->user()->hasRole('superadmin')){
+            $branch_id = auth()->user()->getBranchIdsAttribute();
+            $users = User::select('id', 'name')->whereHas('branches', function($q) use ($branch_id) { $q->whereIn('branch_id', $branch_id); })->get();
+        }else{
+            $users = User::all('id', 'name');
+        }
+
+        return view('admin.task.create', compact("tasks","users"));
     }
 
     /**
@@ -95,11 +104,13 @@ class TasksController extends Controller
         try {
 
             $tasks = new tasks();
-            $tasks->title = $tasks->title;
-            $tasks->description = $tasks->description;
+            $tasks->title = $request->title;
+            $tasks->description = $request->description;
             $tasks->created_by = auth()->user()->id;
             $tasks->updated_by = auth()->user()->id;
             $tasks->save();
+
+            $tasks->users()->attach($request->user_id);
 
             //Session::flash('success', 'Task was created successfully.');
             //return redirect()->route('tasks.index');
@@ -140,7 +151,18 @@ class TasksController extends Controller
      */
     public function edit(tasks $task)
     {
-        return view('admin.task.edit', compact('task'));
+        if(!auth()->user()->hasRole('superadmin')){
+            $branch_id = auth()->user()->getBranchIdsAttribute();
+            $users = User::select('id', 'name')->whereHas('branches', function($q) use ($branch_id) { $q->whereIn('branch_id', $branch_id); })->get();
+        }else{
+            $users = User::pluck('id', 'name')->toArray();
+        }
+
+        $taskUsers = $task->users->sortBy('id')->pluck('id')->toArray();
+        $users = array_filter(array_replace(array_fill_keys($taskUsers, null), array_flip($users)));
+        $users = array_flip($users);
+
+        return view('admin.task.edit', compact('task','users', 'taskUsers'));
     }
 
     /**
@@ -164,10 +186,10 @@ class TasksController extends Controller
 
             $task->title = $request->title;
             $task->description = $request->description;
-            $task->status = $request->status;
             $task->updated_by = auth()->user()->id;
             $task->save();
-
+            $task->users()->detach();
+            $task->users()->sync($request->user_id);
             //Session::flash('success', 'A Wiki Blog updated successfully.');
             //return redirect('admin/wikiBlog');
 

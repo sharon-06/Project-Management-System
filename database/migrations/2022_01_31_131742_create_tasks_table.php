@@ -19,7 +19,6 @@ class CreateTasksTable extends Migration
             $table->text('description');
             $table->unsignedBigInteger('created_by')->index();
             $table->unsignedBigInteger('updated_by')->index();
-            $table->enum('status', ['Pending', 'Accepted', 'Started', 'Completed'])->default('Pending');
             $table->timestamps();
 
             $table->foreign('created_by')->references('id')->on('users');

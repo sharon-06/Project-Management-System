@@ -79,6 +79,11 @@ class Permission extends ModelsPermission
             'create Project Category',
             'edit Project Category',
             'delete Project Category',
+
+            'view Task',
+            'create Task',
+            'edit Task',
+            'delete Task',
         ];
     }
 
