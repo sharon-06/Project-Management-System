@@ -35,7 +35,7 @@ class WikiCategoriesController extends Controller
      */
     public function index()
     {
-        $wikiCategories = wikiCategories::select('*')->orderBy('order_by', 'asc')->with('users')->get();
+        $wikiCategories = wikiCategories::select('*')->orderBy('order_by', 'asc')->with('users','creator')->get();
         return view('admin.wikiCategory.index',compact('wikiCategories'));
     }
 

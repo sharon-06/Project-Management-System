@@ -52,9 +52,18 @@ class TasksController extends Controller
                                         'title',
                                         'created_at',
                                         'updated_at',
-                                    ]);
+                                    ])->with('users');
 
             return Datatables::eloquent($data)
+                ->addColumn('users_avatars', function ($data) {
+                    $users='<div class="avatars_overlapping">';
+  
+                    foreach ($data->users->reverse() as $key => $value) {
+                       $users.='<span class="avatar_overlapping"><p tooltip="'.$value->name.'" flow="up"><img src="'.$value->getImageUrlAttribute($value->id).'" width="50" height="50" /></p></span>';
+                    }
+
+                    return $users.='</div>';
+                })
                 ->addColumn('action', function ($data) {
                     
                     $html='';
@@ -69,7 +78,7 @@ class TasksController extends Controller
                     return $html; 
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['users_avatars', 'action'])
                 ->make(true);
         }
     }
@@ -158,7 +167,7 @@ class TasksController extends Controller
             $users = User::pluck('id', 'name')->toArray();
         }
 
-        $taskUsers = $task->users->sortBy('id')->pluck('id')->toArray();
+        $taskUsers = $task->users->pluck('id')->toArray();
         $users = array_filter(array_replace(array_fill_keys($taskUsers, null), array_flip($users)));
         $users = array_flip($users);
 
@@ -189,7 +198,8 @@ class TasksController extends Controller
             $task->updated_by = auth()->user()->id;
             $task->save();
             $task->users()->detach();
-            $task->users()->sync($request->user_id);
+
+            $task->users()->syncWithoutDetaching($request->user_id);
             //Session::flash('success', 'A Wiki Blog updated successfully.');
             //return redirect('admin/wikiBlog');
 

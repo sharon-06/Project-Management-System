@@ -113,10 +113,43 @@
       removeButtons: 'PasteFromWord'
     });
 
-    $("#user_id").select2();
-    $("ul.select2-selection__rendered").sortable({
-      containment: 'parent'
+    $('#user_id').select2({
+    placeholder: 'Select a user'
+    }).on("select2:select", function (evt) {
+            var id = evt.params.data.id;
+
+            var element = $(this).children("option[value="+id+"]");
+
+            moveElementToEndOfParent(element);
+
+            $(this).trigger("change");
+        });
+    var ele=$("#user_id").parent().find("ul.select2-selection__rendered");
+    ele.sortable({
+        containment: 'parent',
+        update: function() {
+            orderSortedValues();
+            console.log(""+$("#user_id").val())
+        }
     });
+
+    orderSortedValues = function() {
+    var value = ''
+        $("#user_id").parent().find("ul.select2-selection__rendered").children("li[title]").each(function(i, obj){
+
+            var element = $("#user_id").children('option').filter(function () { return $(this).html() == obj.title });
+            moveElementToEndOfParent(element)
+        });
+    };
+
+    moveElementToEndOfParent = function(element) {
+        var parent = element.parent();
+
+        element.detach();
+
+        parent.append(element);
+    };
+
 
 </script>
 

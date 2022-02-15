@@ -75,7 +75,7 @@ class User extends Authenticatable
         if(empty($id)){
             $id = auth()->user()->id;
         }
-
+        
         $image = Image::where('imageable_id', $id)->first();
         if(isset($image->filename)) {
             return asset('/storage/app/public/image/profile/'. $image->filename);
