@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(HolidaySeeder::class);
         $this->call(HolidaysHasBranchesSeeder::class);
         $this->call(RotaTemplateSeeder::class);
+        $this->call(TaskStatusSeeder::class);
         
     }
 }

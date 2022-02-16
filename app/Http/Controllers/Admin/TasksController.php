@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\tasks;
 use App\User;
+use App\taskStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskStoreRequest;
 use App\Http\Requests\TaskUpdateRequest;
@@ -52,8 +53,13 @@ class TasksController extends Controller
                                         'title',
                                         'created_at',
                                         'updated_at',
-                                    ])->with('users');
+                                    ])->with(['users','taskStatus' => function ($query) { 
+                        $query->orderBy('id', 'desc')->with('editor')->first();
+                }]);
 
+            //dd($data[4]->taskStatus[0]->pivot_updated_by);
+
+            
             return Datatables::eloquent($data)
                 ->addColumn('users_avatars', function ($data) {
                     $users='<div class="avatars_overlapping">';
@@ -64,6 +70,24 @@ class TasksController extends Controller
 
                     return $users.='</div>';
                 })
+
+                ->addColumn('taskAccepted', function ($data) {
+                    if(isset($data->taskStatus[0])){
+                        if($data->taskStatus[0]->pivot->updated_by==null || $data->taskStatus[0]->pivot->updated_by==''){
+                            $taskAccepted = 'Not Accepted';
+                        }else{
+
+                            $taskAccepted = $data->taskStatus[0]->editor->name;
+                            //$taskAccepted = '<img src="'.$data->taskStatus[0]->pivot->updated_by->getImageUrlAttribute($data->taskStatus[0]->pivot->updated_by).'" alt="user_id_'.$data->taskStatus[0]->pivot->updated_by.'" class="profile-user-img-small img-circle"> '. $data->taskStatus[0]->pivot->updated_by->name;
+                        }
+                    }else{
+                        $taskAccepted = 'Not Accepted';
+                    }
+                
+                    return $taskAccepted;
+                    
+                })
+
                 ->addColumn('action', function ($data) {
                     
                     $html='';
@@ -78,7 +102,7 @@ class TasksController extends Controller
                     return $html; 
                 })
 
-                ->rawColumns(['users_avatars', 'action'])
+                ->rawColumns(['users_avatars', 'action', 'taskAccepted'])
                 ->make(true);
         }
     }
@@ -120,6 +144,8 @@ class TasksController extends Controller
             $tasks->save();
 
             $tasks->users()->attach($request->user_id);
+
+            $tasks->taskStatus()->attach(1); //Add Task Status ID 1 = Unaccepted
 
             //Session::flash('success', 'Task was created successfully.');
             //return redirect()->route('tasks.index');

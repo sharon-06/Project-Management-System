@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\User_has_tasks;
+use App\Tasks_has_taskstatus;
 use Illuminate\Http\Request;
 
-class UserHasTasksController extends Controller
+class TasksHasTaskstatusController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class UserHasTasksController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\User_has_tasks  $user_has_tasks
+     * @param  \App\Tasks_has_taskstatus  $tasks_has_taskstatus
      * @return \Illuminate\Http\Response
      */
-    public function show(User_has_tasks $user_has_tasks)
+    public function show(Tasks_has_taskstatus $tasks_has_taskstatus)
     {
         //
     }
@@ -52,10 +52,10 @@ class UserHasTasksController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\User_has_tasks  $user_has_tasks
+     * @param  \App\Tasks_has_taskstatus  $tasks_has_taskstatus
      * @return \Illuminate\Http\Response
      */
-    public function edit(User_has_tasks $user_has_tasks)
+    public function edit(Tasks_has_taskstatus $tasks_has_taskstatus)
     {
         //
     }
@@ -64,10 +64,10 @@ class UserHasTasksController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User_has_tasks  $user_has_tasks
+     * @param  \App\Tasks_has_taskstatus  $tasks_has_taskstatus
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User_has_tasks $user_has_tasks)
+    public function update(Request $request, Tasks_has_taskstatus $tasks_has_taskstatus)
     {
         //
     }
@@ -75,10 +75,10 @@ class UserHasTasksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User_has_tasks  $user_has_tasks
+     * @param  \App\Tasks_has_taskstatus  $tasks_has_taskstatus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User_has_tasks $user_has_tasks)
+    public function destroy(Tasks_has_taskstatus $tasks_has_taskstatus)
     {
         //
     }

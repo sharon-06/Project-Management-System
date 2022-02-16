@@ -46,6 +46,7 @@
                                 <th>Id</th>
                                 <th>Title</th>
                                 <th>Allocate User</th>
+                                <th>Task Accepted</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>
                                 <th class="noExport" style="width: 100px;">Action</th>
@@ -89,6 +90,7 @@ function datatables() {
             {data: 'id', name: 'id', visible: false},
             {data: 'title', name: 'title'},
             {data: 'users_avatars', name: 'users_avatars'},
+            {data: 'taskAccepted', name: 'taskAccepted'},
             {data: 'created_at', name: 'created_at', visible: false},
             {data: 'updated_at', name: 'updated_at', visible: false},
             {data: 'action', name: 'action', orderable: false, searchable: false,

@@ -2,15 +2,11 @@
 
 namespace App;
 
-
-use App\User;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Carbon\Carbon;
 
-class tasks extends Model
+class taskStatus extends Model
 {
     use HasFactory;
 
@@ -22,7 +18,7 @@ class tasks extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'created_by', 'updated_by', 'created_at', 'updated_at'
+        'name', 'created_by', 'updated_by', 'created_at', 'updated_at'
     ];
 
 
@@ -43,17 +39,8 @@ class tasks extends Model
     /**
      * The users that belong to the branch.
      */
-    public function users()
+    public function task()
     {
-        return $this->belongsToMany(User::class, 'User_has_tasks', 'task_id','user_id');
+        return $this->belongsToMany(Task::class, 'tasks_has_taskstatuses', 'taskstatuses_id','task_id')->withPivot('created_by', 'updated_by');
     }
-
-    /**
-     * The users that belong to the branch.
-     */
-    public function taskStatus()
-    {
-        return $this->belongsToMany(taskStatus::class, 'tasks_has_taskstatuses', 'task_id','taskstatuses_id')->using(User::class)->withPivot('created_by', 'updated_by');
-    }
-
 }
