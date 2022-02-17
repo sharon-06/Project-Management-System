@@ -1,4 +1,4 @@
-# Project Management System Admin
+# Project Management System Admin LARAVEL 8
 
 This is laravel admin project sample include below list
 
@@ -23,6 +23,12 @@ This is laravel admin project sample include below list
   - One leave To Many branchs (With branch_id in leave table)
   - One leave To One User (With employee_id in leave table)
   - One leave To One User (With approved_by in leave table)
+- WiKi Category
+  - One WiKi Category To Many WiKi Blog (With category_id in wiki_blogs table)
+- WiKi Blog
+  - One WiKi Blog To One WiKi Category (With category_id in wiki_blogs table)
+  - One Parent WiKi Blog To One WiKi Blog (With parent_id in wiki_blogs table)
+  - Many User [Employee] To One WiKi Blog 
 - Eloquent: Relationships
   - One To Many
   - Many To Many
