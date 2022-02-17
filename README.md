@@ -29,6 +29,8 @@ This is laravel admin project sample include below list
   - One WiKi Blog To One WiKi Category (With category_id in wiki_blogs table)
   - One Parent WiKi Blog To One WiKi Blog (With parent_id in wiki_blogs table)
   - Many User [Employee] To One WiKi Blog 
+- Daily Task Management [Under Construction]
+- Project Management [Under Construction]
 - Eloquent: Relationships
   - One To Many
   - Many To Many
