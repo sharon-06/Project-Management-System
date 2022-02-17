@@ -10,6 +10,7 @@ class Tasks_has_taskstatus extends Model
 {
     use HasFactory;
 
+
     /**
      * Get the creator of this wikiCategories.
      */
@@ -22,5 +23,13 @@ class Tasks_has_taskstatus extends Model
      */
     public function editor(){
         return $this->belongsTo(User::class,'updated_by');
+    }
+
+    /**
+     * The users that belong to the branch.
+     */
+    public function taskStatus()
+    {
+        return $this->belongsTo(taskStatus::class, 'taskstatuses_id');
     }
 }

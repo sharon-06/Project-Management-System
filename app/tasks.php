@@ -2,9 +2,6 @@
 
 namespace App;
 
-
-use App\User;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -48,12 +45,24 @@ class tasks extends Model
         return $this->belongsToMany(User::class, 'User_has_tasks', 'task_id','user_id');
     }
 
+    
+
     /**
      * The users that belong to the branch.
      */
     public function taskStatus()
     {
-        return $this->belongsToMany(taskStatus::class, 'tasks_has_taskstatuses', 'task_id','taskstatuses_id')->using(User::class)->withPivot('created_by', 'updated_by');
+        return $this->belongsToMany(taskStatus::class, 'tasks_has_taskstatuses', 'task_id','taskstatuses_id')->withTimestamps()->withPivot('id','created_by', 'updated_by', 'created_at');
     }
+
+    /**
+     * The users that belong to the branch.
+     */
+    public function Tasks_has_taskstatus()
+    {
+        return $this->hasMany(Tasks_has_taskstatus::class,'task_id','id');
+    }
+
+    
 
 }

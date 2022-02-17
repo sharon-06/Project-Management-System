@@ -16,24 +16,28 @@ class TaskStatusSeeder extends Seeder
     {
         $taskStatus = new taskStatus();
         $taskStatus->name = "Unaccepted";
+        $taskStatus->class = "text-danger";
         $taskStatus->created_by = 1;
         $taskStatus->updated_by = 1;
         $taskStatus->save();
 
         $taskStatus = new taskStatus();
         $taskStatus->name = "Pending";
+        $taskStatus->class = "text-warning";
         $taskStatus->created_by = 1;
         $taskStatus->updated_by = 1;
         $taskStatus->save();
 
         $taskStatus = new taskStatus();
         $taskStatus->name = "In Progress";
+        $taskStatus->class = "text-info";
         $taskStatus->created_by = 1;
         $taskStatus->updated_by = 1;
         $taskStatus->save();
 
         $taskStatus = new taskStatus();
         $taskStatus->name = "Completed";
+        $taskStatus->class = "text-success";
         $taskStatus->created_by = 1;
         $taskStatus->updated_by = 1;
         $taskStatus->save();

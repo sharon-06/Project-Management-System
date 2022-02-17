@@ -47,6 +47,7 @@
                                 <th>Title</th>
                                 <th>Allocate User</th>
                                 <th>Task Accepted</th>
+                                <th>Status</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>
                                 <th class="noExport" style="width: 100px;">Action</th>
@@ -91,6 +92,7 @@ function datatables() {
             {data: 'title', name: 'title'},
             {data: 'users_avatars', name: 'users_avatars'},
             {data: 'taskAccepted', name: 'taskAccepted'},
+            {data: 'status', name: 'status'},
             {data: 'created_at', name: 'created_at', visible: false},
             {data: 'updated_at', name: 'updated_at', visible: false},
             {data: 'action', name: 'action', orderable: false, searchable: false,
@@ -105,14 +107,15 @@ function datatables() {
 
 datatables();
 
-/*function funChangeStatus(id,status) {
+function funChangeStatus(id,status,currentStatusID) {
     $("#pageloader").fadeIn();
     $.ajax({
-      url : '{{ route('admin.wikiBlog.ajax.change_status') }}',
+      url : '{{ route('admin.task.ajax.change_status') }}',
       data: {
         "_token": "{{ csrf_token() }}",
         "id": id,
-        "status": status
+        "status": status,
+        "currentStatusID": currentStatusID
         },
       type: 'get',
       dataType: 'json',
@@ -122,7 +125,7 @@ datatables();
         $("#pageloader").hide();
       }
     });
-}*/
+}
 </script>
 
 

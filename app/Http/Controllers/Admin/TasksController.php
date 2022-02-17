@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class TasksController extends Controller
@@ -53,12 +54,19 @@ class TasksController extends Controller
                                         'title',
                                         'created_at',
                                         'updated_at',
-                                    ])->with(['users','taskStatus' => function ($query) { 
-                        $query->orderBy('id', 'desc')->with('editor')->first();
-                }]);
+                                    ])
 
-            //dd($data[4]->taskStatus[0]->pivot_updated_by);
-
+                            ->with(['users',
+                                    'Tasks_has_taskstatus' => function ($query) { 
+                                            $query->orderBy('created_at', 'desc')
+                                                    ->whereDate('created_at', Carbon::today())
+                                                    ->with('creator','taskStatus')
+                                                    ->first();
+                                            },
+                                    'taskStatus' => function ($query) { 
+                                            $query->orderBy('pivot_created_at', 'desc')->first();
+                                    }]);
+                                    //dd($data);
             
             return Datatables::eloquent($data)
                 ->addColumn('users_avatars', function ($data) {
@@ -72,14 +80,12 @@ class TasksController extends Controller
                 })
 
                 ->addColumn('taskAccepted', function ($data) {
-                    if(isset($data->taskStatus[0])){
-                        if($data->taskStatus[0]->pivot->updated_by==null || $data->taskStatus[0]->pivot->updated_by==''){
-                            $taskAccepted = 'Not Accepted';
-                        }else{
-
-                            $taskAccepted = $data->taskStatus[0]->editor->name;
-                            //$taskAccepted = '<img src="'.$data->taskStatus[0]->pivot->updated_by->getImageUrlAttribute($data->taskStatus[0]->pivot->updated_by).'" alt="user_id_'.$data->taskStatus[0]->pivot->updated_by.'" class="profile-user-img-small img-circle"> '. $data->taskStatus[0]->pivot->updated_by->name;
+                    if(isset($data->Tasks_has_taskstatus[0]) && isset($data->Tasks_has_taskstatus[0]->creator)){
+                        if($data->Tasks_has_taskstatus[0]->taskstatuses_id==1){
+                            return $taskAccepted = 'Not Accepted';
                         }
+                        $taskAccepted = '<img src="'.$data->Tasks_has_taskstatus[0]->creator->getImageUrlAttribute($data->Tasks_has_taskstatus[0]->creator->id).'" alt="user_id_'.$data->Tasks_has_taskstatus[0]->creator->id.'" class="profile-user-img-small img-circle"> '. $data->Tasks_has_taskstatus[0]->creator->name;
+                        
                     }else{
                         $taskAccepted = 'Not Accepted';
                     }
@@ -87,7 +93,28 @@ class TasksController extends Controller
                     return $taskAccepted;
                     
                 })
+                ->addColumn('status', function ($data) {
+                        $class ='text-danger';
+                        $currentStatusID = 1;
+                        if(isset($data->Tasks_has_taskstatus[0]) && isset($data->Tasks_has_taskstatus[0]->taskStatus)){
+                            $taskActiveStatus = $data->Tasks_has_taskstatus[0]->taskStatus->name;
+                            $currentStatusID = $data->Tasks_has_taskstatus[0]->taskStatus->id;
+                            $class =$data->Tasks_has_taskstatus[0]->taskStatus->class;
+                        }else{
+                            $taskActiveStatus = 'Unaccepted';
+                        }
 
+                        $allTaskStatus = taskStatus::all();
+                        $Status= '<div class="dropdown action-label">
+                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o '.$class.'"></i> '.$taskActiveStatus.' </a><div class="dropdown-menu dropdown-menu-right" style="">';
+
+                        foreach ($allTaskStatus as $allTaskStatus) {
+                            $Status.= '<a class="dropdown-item" href="#" onclick="funChangeStatus('.$data->id.','.$allTaskStatus->id.','.$currentStatusID.'); return false;"><i class="fa fa-dot-circle-o '.$allTaskStatus->class.'"></i> '.$allTaskStatus->name.'</a>';
+                        }
+                        
+                        $Status.= '</div></div>';
+                        return $Status;
+                    })
                 ->addColumn('action', function ($data) {
                     
                     $html='';
@@ -102,7 +129,7 @@ class TasksController extends Controller
                     return $html; 
                 })
 
-                ->rawColumns(['users_avatars', 'action', 'taskAccepted'])
+                ->rawColumns(['users_avatars', 'action', 'taskAccepted','status'])
                 ->make(true);
         }
     }
@@ -261,5 +288,51 @@ class TasksController extends Controller
         return response()->json([
             'delete' => 'task deleted successfully.' // for status 200
         ]);
+    }
+
+    /**
+     * Datatables Ajax Data
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function change_status(Request $request)
+    {
+        try {
+            $currentStatusID = $request->currentStatusID;
+            $task_id = $request->id;
+            $taskstatuses_id = $request->status;
+
+            $tasks = tasks::find($task_id);
+            if (empty($tasks)) {
+                //Session::flash('failed', 'Task Update Denied');
+                //return redirect()->back();
+                return response()->json([
+                    'error' => 'Task update denied.' // for status 200
+                ]);   
+            }
+
+            if($currentStatusID!=$taskstatuses_id){
+                $tasks->taskStatus()->attach($taskstatuses_id, ['created_by' => auth()->user()->id,'updated_by' => auth()->user()->id]); //Add Task Status ID 1 = Unaccepted
+            }
+            
+            //Session::flash('success', 'A Task updated successfully.');
+            //return redirect('admin/print_buttons');
+
+            return response()->json([
+                'success' => 'Task update successfully.' // for status 200
+            ]);
+
+        } catch (\Exception $exception) {
+
+            DB::rollBack();
+
+            //Session::flash('failed', $exception->getMessage() . ' ' . $exception->getLine());
+            /*return redirect()->back()->withInput($request->all());*/
+
+            return response()->json([
+                'error' => $exception->getMessage() . ' ' . $exception->getLine() // for status 200
+            ]);
+        }
     }
 }
