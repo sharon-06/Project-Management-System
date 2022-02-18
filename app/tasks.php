@@ -42,7 +42,7 @@ class tasks extends Model
      */
     public function users()
     {
-        return $this->belongsToMany(User::class, 'User_has_tasks', 'task_id','user_id');
+        return $this->belongsToMany(User::class, 'user_has_tasks', 'task_id','user_id');
     }
 
     
