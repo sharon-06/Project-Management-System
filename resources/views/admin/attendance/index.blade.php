@@ -113,11 +113,13 @@ function datatables() {
         stateSave     : true,
         responsive    : true,
         fixedHeader   : true,
-        processing    : true,
-        serverSide    : false,
         "bDestroy"    : true,
         pagingType    : "full_numbers",
         "bLengthChange": false,
+
+        /*"processing": true, // Make this true, to show the "Processing" word while loading
+        "serverSide": true,*/
+
         ajax          : {
             url     : '{{ url('admin/attendance/ajax/data') }}',
             dataType: 'json'
