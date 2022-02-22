@@ -121,8 +121,11 @@ function funChangeStatus(id,status,currentStatusID) {
       dataType: 'json',
       success: function( result )
       {
-        datatables();
-        $("#pageloader").hide();
+        setTimeout(function() {   //calls click event after a certain time
+            datatables();
+            $("#pageloader").hide();
+            alert_message(result);
+        }, 1000);
       }
     });
 }

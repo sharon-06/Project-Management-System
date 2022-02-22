@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\tasks;
 use App\User;
 use App\taskStatus;
+use App\Tasks_has_taskstatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TaskStoreRequest;
 use App\Http\Requests\TaskUpdateRequest;
@@ -56,16 +57,18 @@ class TasksController extends Controller
                                         'updated_at',
                                     ])
 
-                            ->with(['users',
+                            ->with([
+                                    'users',
                                     'Tasks_has_taskstatus' => function ($query) { 
                                             $query->orderBy('created_at', 'desc')
                                                     ->whereDate('created_at', Carbon::today())
-                                                    ->with('creator','taskStatus')
-                                                    ->first();
+                                                    ->with('creator','taskStatus');
                                             },
                                     'taskStatus' => function ($query) { 
                                             $query->orderBy('pivot_created_at', 'desc')->first();
-                                    }]);
+                                    }
+                                    ]);
+                                    //->get();
                                     //dd($data);
             
             return Datatables::eloquent($data)
@@ -302,16 +305,25 @@ class TasksController extends Controller
             $currentStatusID = $request->currentStatusID;
             $task_id = $request->id;
             $taskstatuses_id = $request->status;
-
-            $tasks = tasks::find($task_id);
+            $user_id = auth()->user()->id;
+            $tasks = tasks::with([
+                                    'users' => function ($query) use ($user_id) { 
+                                            $query->find($user_id);
+                                        }
+                                    ])->find($task_id);
             if (empty($tasks)) {
-                //Session::flash('failed', 'Task Update Denied');
-                //return redirect()->back();
                 return response()->json([
                     'error' => 'Task update denied.' // for status 200
                 ]);   
             }
 
+            if (empty($tasks->users[0]) ) {
+                return response()->json([
+                    'error' => 'Task update denied because you are not allowed to accept this task !!' // for status 200
+                ]);   
+            }
+
+            
             if($currentStatusID!=$taskstatuses_id){
                 $tasks->taskStatus()->attach($taskstatuses_id, ['created_by' => auth()->user()->id,'updated_by' => auth()->user()->id]); //Add Task Status ID 1 = Unaccepted
             }
