@@ -37,7 +37,7 @@
                         @if(count($category->wikiBlogs)>0)
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-angle-right"></i>
+                                <!-- <i class="nav-icon fas fa-angle-right"></i> -->
                                 <p>
                                     {{$category->name}}
                                     <i class="right fas fa-angle-left"></i>

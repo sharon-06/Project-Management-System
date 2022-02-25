@@ -39,6 +39,8 @@ class WikiCategoriesController extends Controller
         return view('admin.wikiCategory.index',compact('wikiCategories'));
     }
 
+    
+
     /**
      * Show the form for creating a new resource.
      *

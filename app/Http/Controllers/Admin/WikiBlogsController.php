@@ -38,6 +38,16 @@ class WikiBlogsController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function order_by()
+    {
+        return view('admin.wikiBlog.order_by');
+    }
+
+    /**
      * Datatables Ajax Data
      *
      * @return mixed
@@ -48,7 +58,7 @@ class WikiBlogsController extends Controller
 
         if ($request->ajax() == true) {
 
-            $data = wikiBlogs::with('category','parent');
+            $data = wikiBlogs::select('*')->orderBy('order_by', 'asc')->with('category','parent');
 
             return Datatables::eloquent($data)
                 ->addColumn('action', function ($data) {
@@ -79,7 +89,9 @@ class WikiBlogsController extends Controller
                 ->addColumn('category', function ($data) {
                         return $data->category->name;
                     })
-
+                ->addColumn('category_order_by', function ($data) {
+                        return $data->category->order_by;
+                    })
                 ->rawColumns(['action','status','category'])
                 ->make(true);
         }
@@ -281,6 +293,46 @@ class WikiBlogsController extends Controller
 
             return response()->json([
                 'success' => 'Wiki Blogs update successfully.' // for status 200
+            ]);
+
+        } catch (\Exception $exception) {
+
+            DB::rollBack();
+
+            //Session::flash('failed', $exception->getMessage() . ' ' . $exception->getLine());
+            /*return redirect()->back()->withInput($request->all());*/
+
+            return response()->json([
+                'error' => $exception->getMessage() . ' ' . $exception->getLine() // for status 200
+            ]);
+        }
+    }
+
+     /**
+     * Datatables Ajax Data
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function change_order(Request $request)
+    {
+        try {
+
+            $order_by=1;
+            foreach ($request->ids as $id) {
+                $wikiBlog = wikiBlogs::find($id);
+                if (empty($wikiBlog)) {
+                    return response()->json([
+                        'error' => 'Wiki Blog update denied.' // for status 200
+                    ]);   
+                }
+                $wikiBlog->order_by = $order_by;
+                $wikiBlog->save();
+                $order_by++;
+            }
+
+            return response()->json([
+                'success' => 'Wiki Blog update successfully.' // for status 200
             ]);
 
         } catch (\Exception $exception) {

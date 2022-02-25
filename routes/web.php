@@ -138,10 +138,14 @@ Route::group([
     Route::get('wikiCategory/ajax/change_order', 'WikiCategoriesController@change_order')->name('wikiCategory.ajax.change_order'); // For change order
 
     // Wiki Blog Routes
+    Route::get('wikiBlog/order_by', 'WikiBlogsController@order_by')->name('wikiBlog.order_by'); // For change order
     Route::resource('wikiBlog', 'WikiBlogsController')->parameters(['wikiBlog' => 'wikiBlog']);
+
     Route::get('wikiBlog/ajax/data', 'WikiBlogsController@datatables'); // For Datatables
     Route::post( 'wikiBlog/ajax/get_blog_by_category', 'WikiBlogsController@get_blog_by_category' )->name('wikiBlog.ajax.get_blog_by_category'); // Get user option by branch in ajax
     Route::get('wikiBlog/ajax/change_status', 'WikiBlogsController@change_status')->name('wikiBlog.ajax.change_status'); // For change status
+    Route::get('wikiBlog/ajax/change_order', 'WikiBlogsController@change_order')->name('wikiBlog.ajax.change_order'); // For change order
+
     
     Route::get('wikiBlogView', 'WikiBlogsViewController@index')->name('wikiBlogView'); // For View
     Route::post( 'wikiBlogView/ajax/get_blog_details', 'WikiBlogsViewController@get_blog_details' )->name('wikiBlogView.ajax.get_blog_details'); 
