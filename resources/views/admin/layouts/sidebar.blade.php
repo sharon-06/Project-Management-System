@@ -25,19 +25,10 @@
                             </a>
                         </li>
 
-                        @can('view user')
-                        <li class="nav-item">
-                            <a href="{{ url('admin/user') }}" class="nav-link {{ Route::is('admin.user.*') || Route::is('admin.user.*') || Route::is('admin.profile.*') ? 'active' : '' }}">
-                                <i class="fas fa-users nav-icon"></i>
-                                <p>Employee</p>
-                            </a>
-                        </li>
-                        @endcan
-
                         <li class="nav-item">
                             <a href="{{ url('admin/user-treeview') }}" class="nav-link {{ Route::is('admin.user-treeview')  ? 'active' : '' }}">
                                 <i class="fas fa-users nav-icon" aria-hidden="true"></i>
-                                <p>Employee - Tree View</p>
+                                <p>Employee Treeview</p>
                             </a>
                         </li>
                         
@@ -103,17 +94,27 @@
                         @endcan  
 
                         @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('Team Leader')|| auth()->user()->hasRole('Branch Manager')  || auth()->user()->hasRole('Developer') )
-                        <li class="nav-item has-treeview {{ (Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')) || Route::is('admin.leave.*') || (Route::is('admin.rota.*') && !Route::is('admin.rota.employee')) || (Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*')) || Route::is('admin.report.employee_daily_summary')  ? 'menu-open' : '' }}">
+                        <li class="nav-item has-treeview {{ (Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')) || Route::is('admin.leave.*') || (Route::is('admin.rota.*') && !Route::is('admin.rota.employee')) || (Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*')) || Route::is('admin.report.employee_daily_summary') || Route::is('admin.user.*') || Route::is('admin.profile.*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ 
-                                (Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')) || Route::is('admin.leave.*') || Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*') || (Route::is('admin.rota.*') && !Route::is('admin.rota.employee')) || (Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*')) || Route::is('admin.report.employee_daily_summary')  ? 'active' : '' }}">
+                                (Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')) || Route::is('admin.leave.*') || Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*') || (Route::is('admin.rota.*') && !Route::is('admin.rota.employee')) || (Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*')) || Route::is('admin.report.employee_daily_summary') || Route::is('admin.user.*') || Route::is('admin.profile.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-user-cog"></i>
                                 <p>
                                     Admin Panel
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                            <ul class="nav nav-treeview" style="background-color: black;">
 
+                           
+                            <ul class="nav nav-treeview" style="background-color: black;">
+                                @can('view user')
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/user') }}" class="nav-link {{ Route::is('admin.user.*') || Route::is('admin.user.*') || Route::is('admin.profile.*') ? 'active' : '' }}">
+                                        <i class="fas fa-users nav-icon"></i>
+                                        <p>Employee</p>
+                                    </a>
+                                </li>
+                                @endcan
+                                
                                 @can('view attendance')
                                 <li class="nav-item">
                                     <a href="{{ url('admin/attendance') }}" class="nav-link {{ Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')  ? 'active' : '' }}">
@@ -254,7 +255,7 @@
                             </ul>
                         </li>
                         @endif
-                        
+
                     </ul>
                 </li>
                 

@@ -28,7 +28,7 @@ if (!(isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' ||
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="refresh" content="{{ (config('session.lifetime') * 60)+10 }}">
 
-    <title>{{ config('app.name', 'Project Management System') }}</title>
+    <title>{{ config('app.name', 'Ceckin') }}</title>
 
     <!-- HEAD STYLES [START]-->
         
