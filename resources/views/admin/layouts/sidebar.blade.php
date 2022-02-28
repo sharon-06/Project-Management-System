@@ -40,75 +40,6 @@
                                 <p>Employee - Tree View</p>
                             </a>
                         </li>
-
-                        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('Team Leader')|| auth()->user()->hasRole('Branch Manager')  || auth()->user()->hasRole('Developer') )
-                        <li class="nav-item has-treeview {{ (Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')) || Route::is('admin.leave.*') || (Route::is('admin.rota.*') && !Route::is('admin.rota.employee'))  ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ 
-                                (Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')) || Route::is('admin.leave.*') || Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*') || (Route::is('admin.rota.*') && !Route::is('admin.rota.employee')) ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-cog"></i>
-                                <p>
-                                    Admin Panel
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview" style="background-color: black;">
-
-                                @can('view attendance')
-                                <li class="nav-item">
-                                    <a href="{{ url('admin/attendance') }}" class="nav-link {{ Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')  ? 'active' : '' }}">
-                                        <i class="fa fa-clock-o  nav-icon" aria-hidden="true"></i>
-                                        <p>Attendance</p>
-                                    </a>
-                                </li>
-                                @endcan
-
-                                @can('view attendance')
-                                <li class="nav-item">
-                                    <a href="{{ url('admin/report/employee_daily_summary') }}" class="nav-link {{ Route::is('admin.report.employee_daily_summary')  ? 'active' : '' }}">
-                                        <i class="fa fa-clock-o  nav-icon" aria-hidden="true"></i>
-                                        <p>Report - Employee Daily Summary</p>
-                                    </a>
-                                </li>
-                                @endcan
-
-                                @can('view leave - admin')
-                                <li class="nav-item">
-                                    <a href="{{ url('admin/leave') }}" class="nav-link {{ Route::is('admin.leave.*')  ? 'active' : '' }}">
-                                        <i class="fas fa-briefcase nav-icon" aria-hidden="true"></i>
-                                        <p>Leave</p>
-                                    </a>
-                                </li>
-                                @endcan 
-
-                                @can('view rota')
-                                <li class="nav-item">
-                                    <a href="{{ url('admin/rota') }}" class="nav-link {{ Route::is('admin.rota.*') && !Route::is('admin.rota.employee')  ? 'active' : '' }}">
-                                        <i class="fas fa-calendar-alt nav-icon"></i>
-                                        <p>Rota</p>
-                                    </a>
-                                </li>
-                                @endcan  
-
-                                @can('view Wiki Category')
-                                <li class="nav-item">
-                                    <a href="{{ url('admin/wikiCategory') }}" class="nav-link {{ Route::is('admin.wikiCategory.*')  ? 'active' : '' }}">
-                                        <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
-                                        <p>Wiki Category</p>
-                                    </a>
-                                </li>
-                                @endcan  
-
-                                @can('view Wiki Blog')
-                                <li class="nav-item">
-                                    <a href="{{ url('admin/wikiBlog') }}" class="nav-link {{ Route::is('admin.wikiBlog.*')  ? 'active' : '' }}">
-                                        <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
-                                        <p>Wiki Edit</p>
-                                    </a>
-                                </li>
-                                @endcan 
-                            </ul>
-                        </li>
-                        @endif
                         
                         <li class="nav-item">
                             <a href="{{ url('admin/attendance/employee') }}" class="nav-link {{ Route::is('admin.attendance.employee')  ? 'active' : '' }}">
@@ -136,6 +67,133 @@
                                 <p>Rota</p>
                             </a>
                         </li>
+
+                        @can('view holiday')
+                        <li class="nav-item">
+                            <a href="{{ url('admin/holiday') }}" class="nav-link {{ Route::is('admin.holiday.*')  ? 'active' : '' }}">
+                                <i class="fas fa-glass-cheers nav-icon"></i>
+                                <p>Public Holiday</p>
+                            </a>
+                        </li>
+                        @endcan 
+
+                        <li class="nav-item">
+                            <a href="{{ url('admin/wikiBlogView') }}" class="nav-link {{ Route::is('admin.wikiBlogView.*')  ? 'active' : '' }}">
+                                <i class="fa fa-book nav-icon" aria-hidden="true"></i>
+                                <p>Documentation</p>
+                            </a>
+                        </li>
+
+                        @if(auth()->user()->hasRole('developer'))
+                        <li class="nav-item">
+                            <a href="{{ url('maileclipse') }}" class="nav-link" target="_blank">
+                                <i class="fas fa-envelope-open-text nav-icon" aria-hidden="true"></i>
+                                <p>Email Templates</p>
+                            </a>
+                        </li>
+                        @endif
+
+                        @can('view Task')
+                        <li class="nav-item">
+                            <a href="{{ url('admin/task') }}" class="nav-link {{ Route::is('admin.task.*')  ? 'active' : '' }}">
+                                <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
+                                <p>Task</p>
+                            </a>
+                        </li>
+                        @endcan  
+
+                        @if(auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('Team Leader')|| auth()->user()->hasRole('Branch Manager')  || auth()->user()->hasRole('Developer') )
+                        <li class="nav-item has-treeview {{ (Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')) || Route::is('admin.leave.*') || (Route::is('admin.rota.*') && !Route::is('admin.rota.employee')) || (Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*')) || Route::is('admin.report.employee_daily_summary')  ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ 
+                                (Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')) || Route::is('admin.leave.*') || Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*') || (Route::is('admin.rota.*') && !Route::is('admin.rota.employee')) || (Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*')) || Route::is('admin.report.employee_daily_summary')  ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-user-cog"></i>
+                                <p>
+                                    Admin Panel
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview" style="background-color: black;">
+
+                                @can('view attendance')
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/attendance') }}" class="nav-link {{ Route::is('admin.attendance.*') && !Route::is('admin.attendance.employee')  ? 'active' : '' }}">
+                                        <i class="fa fa-clock-o  nav-icon" aria-hidden="true"></i>
+                                        <p>Attendance</p>
+                                    </a>
+                                </li>
+                                @endcan
+
+                                @can('view attendance')
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link {{ Route::is('admin.report.employee_daily_summary')  ? 'active' : '' }}">
+                                        <i class="fa fa-clock-o  nav-icon" aria-hidden="true"></i>
+                                        <p>Report
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview" style="background-color: black;">
+                                        @can('view attendance')
+                                        <li class="nav-item">
+                                            <a href="{{ url('admin/report/employee_daily_summary') }}" class="nav-link {{ Route::is('admin.report.employee_daily_summary')  ? 'active' : '' }}">
+                                                <i class="fa fa-clock-o  nav-icon" aria-hidden="true"></i>
+                                                <p>Employee Daily Summary</p>
+                                            </a>
+                                        </li>
+                                        @endcan
+                                    </ul>
+                                </li>
+                                @endcan
+
+                                @can('view leave - admin')
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/leave') }}" class="nav-link {{ Route::is('admin.leave.*')  ? 'active' : '' }}">
+                                        <i class="fas fa-briefcase nav-icon" aria-hidden="true"></i>
+                                        <p>Leave</p>
+                                    </a>
+                                </li>
+                                @endcan 
+
+                                @can('view rota')
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/rota') }}" class="nav-link {{ Route::is('admin.rota.*') && !Route::is('admin.rota.employee')  ? 'active' : '' }}">
+                                        <i class="fas fa-calendar-alt nav-icon"></i>
+                                        <p>Rota</p>
+                                    </a>
+                                </li>
+                                @endcan  
+
+                                <li class="nav-item has-treeview {{ (Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*'))  ? 'menu-open' : '' }}">
+                                    <a href="#" class="nav-link {{ 
+                                        (Route::is('admin.wikiCategory.*') || Route::is('admin.wikiBlog.*')) ? 'active' : '' }}">
+                                        <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
+                                        <p>
+                                            Documentation Edit
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                                    <ul class="nav nav-treeview" style="background-color: black;">
+                                        @can('view Wiki Category')
+                                        <li class="nav-item">
+                                            <a href="{{ url('admin/wikiCategory') }}" class="nav-link {{ Route::is('admin.wikiCategory.*')  ? 'active' : '' }}">
+                                                <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
+                                                <p>Category</p>
+                                            </a>
+                                        </li>
+                                        @endcan  
+
+                                        @can('view Wiki Blog')
+                                        <li class="nav-item">
+                                            <a href="{{ url('admin/wikiBlog') }}" class="nav-link {{ Route::is('admin.wikiBlog.*')  ? 'active' : '' }}">
+                                                <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
+                                                <p>Post</p>
+                                            </a>
+                                        </li>
+                                        @endcan 
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        @endif
 
                         @if(auth()->user()->hasRole('superadmin'))
                         <li class="nav-item has-treeview {{ Route::is('admin.role.*') || Route::is('admin.company.*') || Route::is('admin.branch.*') || Route::is('admin.department.*') || Route::is('admin.rota_template.*') ? 'menu-open' : '' }}">
@@ -196,40 +254,7 @@
                             </ul>
                         </li>
                         @endif
-
-                        @can('view holiday')
-                        <li class="nav-item">
-                            <a href="{{ url('admin/holiday') }}" class="nav-link {{ Route::is('admin.holiday.*')  ? 'active' : '' }}">
-                                <i class="fas fa-glass-cheers nav-icon"></i>
-                                <p>Public Holiday</p>
-                            </a>
-                        </li>
-                        @endcan 
-
-                        <li class="nav-item">
-                            <a href="{{ url('admin/wikiBlogView') }}" class="nav-link {{ Route::is('admin.wikiBlogView.*')  ? 'active' : '' }}">
-                                <i class="fa fa-book nav-icon" aria-hidden="true"></i>
-                                <p>Documentation</p>
-                            </a>
-                        </li>
-
-                        @if(auth()->user()->hasRole('developer'))
-                        <li class="nav-item">
-                            <a href="{{ url('maileclipse') }}" class="nav-link" target="_blank">
-                                <i class="fas fa-envelope-open-text nav-icon" aria-hidden="true"></i>
-                                <p>Email Templates</p>
-                            </a>
-                        </li>
-                        @endif
-
-                        @can('view Task')
-                        <li class="nav-item">
-                            <a href="{{ url('admin/task') }}" class="nav-link {{ Route::is('admin.task.*')  ? 'active' : '' }}">
-                                <i class="fa fa-list-alt nav-icon" aria-hidden="true"></i>
-                                <p>Task</p>
-                            </a>
-                        </li>
-                        @endcan  
+                        
                     </ul>
                 </li>
                 
