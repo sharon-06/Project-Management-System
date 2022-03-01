@@ -35,8 +35,9 @@
                 <!-- Team item -->
                 @foreach($teams as $team)
                 <div class="col-xl-3 col-sm-6 mb-5">
-                    
+                    @can('delete Team')
                     <form method="post" class="float-right delete-form-team" action="{{route('admin.team.destroy', ['team' => $team->id ])}}"><input type="hidden" name="_token" value="{{Session::token()}}"><input type="hidden" name="_method" value="delete"><button type="submit" class="close mt-2 mr-2"><span tooltip="Delete" flow="up">X</span></button></form>
+                    @endcan
 
                     <div class="bg-white rounded shadow-sm py-5 px-4">
                         <h5 class="mb-3">{{$team->title}}</h5>
@@ -53,13 +54,16 @@
                         </div>
 
                         <p class="card-text mt-2"></p>
+                        @can('edit Team')
                         <a href="{{ route('admin.team.edit', ['team' => $team->id]) }}" class="btn btn-success ml-1" id="popup-modal-button" data-original-title="" title=""><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>
+                        @endcan
                         <a href="{{ route('admin.team.show', ['team' => $team->id]) }}" id="popup-modal-button"  class="btn btn-danger mr-2"><span tooltip="View" flow="right"><i class="fas fa-eye"></i></span></a>
                     </div>
                 </div><!-- End -->
                 @endforeach
 
                 <!--Add New Team item -->
+                @can('create Team')
                 <div class="col-xl-3 col-sm-6 mb-5">
                     <div class="bg-white rounded shadow-sm py-5 px-4" style="height: 385px;text-align: center;">
                         <a href="{{ route('admin.team.create') }}" class="btn btn-danger btn-add-circle edit-add-modal-button js-ajax-ux-request reset-target-modal-form" id="popup-modal-buttonUserRole" style="margin-top: 120px;">
@@ -67,6 +71,7 @@
                     </a>
                     </div>
                 </div>
+                @endcan
                 <!-- End -->
             </div>
         </div>
