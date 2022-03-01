@@ -284,10 +284,10 @@ class TasksController extends Controller
      */
     public function destroy(tasks $task)
     {
-        // delete wiki blog
+        // delete task
         $task->delete();
 
-        //return redirect('admin/task')->with('delete', 'wiki blog deleted successfully.');
+        //return redirect('admin/task')->with('delete', 'task deleted successfully.');
         return response()->json([
             'delete' => 'task deleted successfully.' // for status 200
         ]);

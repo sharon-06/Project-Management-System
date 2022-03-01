@@ -10,6 +10,7 @@ use App\Department;
 use App\Attendance;
 use App\Leave;
 use App\Rota;
+use App\teams;
 
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -208,7 +209,9 @@ class UserController extends Controller
     {
           $users = User::with(['allChildren',"latest_attendance_creator"])->where('parent_id',null)->get();
 
+          $teams = teams::with(['leader',"users"])->get();
+
           //dd($users);
-          return view('admin.user.tree', compact('users'));
+          return view('admin.user.tree', compact('users','teams'));
     }
 }

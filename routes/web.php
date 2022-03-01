@@ -157,10 +157,13 @@ Route::group([
     Route::resource('projectCategory', 'ProjectCategoriesController')->parameters(['projectCategory' => 'projectCategory']);
     Route::get('projectCategory/ajax/change_status', 'ProjectCategoriesController@change_status')->name('projectCategory.ajax.change_status'); // For change status
 
-    // Project Category Routes
+    // Task Routes
     Route::resource('task', 'TasksController')->parameters(['task' => 'task']);
     Route::get('task/ajax/data', 'TasksController@datatables'); // For Datatables
     Route::get('task/ajax/change_status', 'TasksController@change_status')->name('task.ajax.change_status'); // For change status
+
+    // Team Routes
+    Route::resource('team', 'TeamsController')->parameters(['team' => 'team']);
 
 
 });

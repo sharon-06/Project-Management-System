@@ -84,6 +84,11 @@ class Permission extends ModelsPermission
             'create Task',
             'edit Task',
             'delete Task',
+
+            'view Team',
+            'create Team',
+            'edit Team',
+            'delete Team',
         ];
     }
 

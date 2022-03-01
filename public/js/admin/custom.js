@@ -51,11 +51,11 @@ $(document).ready(function () {
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             data: $(this).serialize(),
             success: function(message){
+                console.log(message);
                 $("#popup-modal").modal('hide');
                 if(typeof(message.success) != "undefined" && message.success !== null) {
                     var messageHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert"><strong>Success: </strong> '+ message.success +' <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
                     //$('#message').html(messageHtml);
-
                     $("#navbar_current_Status").load(location.href+" #navbar_current_Status>*","");// after new attendance create. reload navbar_current_Status div
                     setTimeout(function() {   //calls click event after a certain time
                         datatables();
