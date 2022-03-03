@@ -49,4 +49,12 @@ class teams extends Model
     {
         return $this->belongsToMany(User::class, 'user_has_teams', 'team_id','user_id');
     }
+
+    /**
+     * The users that belong to the branch.
+     */
+    public function backup()
+    {
+        return $this->belongsToMany(User::class, 'User_Backup_has_teams', 'team_id','user_id');
+    }
 }

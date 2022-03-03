@@ -43,11 +43,22 @@
                         <h5 class="mb-3">{{$team->title}}</h5>
                         <p tooltip="Team Leader: {{$team->leader->name}}" flow="up"><img src="{{$team->leader->getImageUrlAttribute($team->leader->id)}}" alt="" width="100" class="img-fluid rounded-circle mb-2 img-thumbnail shadow-sm"></p>
                         <span class="small text-uppercase text-muted">Team Member</span><br>
-                        <div class="avatars_overlapping">
+                        <div class="avatars_overlapping mb-1">
                             @foreach($team->users as $teamMember)
                                 <span class="avatar_overlapping">
                                     <p tooltip="{{$teamMember->name}}" flow="up">
                                         <img src="{{$teamMember->getImageUrlAttribute($teamMember->id)}}" width="50" height="50">
+                                    </p>
+                                </span>
+                            @endforeach
+                        </div><br>
+
+                        <span class="small text-uppercase text-muted">Backup Member</span><br>
+                        <div class="avatars_overlapping">
+                            @foreach($team->backup as $teamMemberBackup)
+                                <span class="avatar_overlapping">
+                                    <p tooltip="{{$teamMemberBackup->name}}" flow="up">
+                                        <img src="{{$teamMemberBackup->getImageUrlAttribute($teamMemberBackup->id)}}" width="50" height="50">
                                     </p>
                                 </span>
                             @endforeach
@@ -65,8 +76,8 @@
                 <!--Add New Team item -->
                 @can('create Team')
                 <div class="col-xl-3 col-sm-6 mb-5">
-                    <div class="bg-white rounded shadow-sm py-5 px-4" style="height: 385px;text-align: center;">
-                        <a href="{{ route('admin.team.create') }}" class="btn btn-danger btn-add-circle edit-add-modal-button js-ajax-ux-request reset-target-modal-form" id="popup-modal-buttonUserRole" style="margin-top: 120px;">
+                    <div class="bg-white rounded shadow-sm py-5 px-4" style="height: 478px;text-align: center;">
+                        <a href="{{ route('admin.team.create') }}" class="btn btn-danger btn-add-circle edit-add-modal-button js-ajax-ux-request reset-target-modal-form" id="popup-modal-buttonUserRole" style="margin-top: 165px;">
                         <span tooltip="Create new team member." flow="right"><i class="fas fa-plus"></i></span>
                     </a>
                     </div>

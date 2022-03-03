@@ -27,6 +27,7 @@
                             <label>Description</label>
                             <textarea id="description" name="description" class="form-control" required maxlength="5" autofocus>{{$team->description}}</textarea>  
                         </div>
+                        
                         <div class="form-group">
                             <label>Team Leader</label>
                             <select class="form-control select2" id="team_leader" name="team_leader" required autocomplete="team_leader">
@@ -42,6 +43,16 @@
                             <select class="form-control select2" id="user_id" name="user_id[]" required autocomplete="user_id" multiple>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}" @if(in_array($user->id, $teamUsers)) selected="selected" @endif >{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                            <label id="select2-error" class="error" for="select2"></label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Team Backup Members &nbsp;</label><input type="checkbox" id="checkbox_user" > &nbsp;Select All
+                            <select class="form-control select2" id="user_backup_id" name="user_backup_id[]" required autocomplete="user_backup_id" multiple>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}" @if(in_array($user->id, $teamUsersBackup)) selected="selected" @endif >{{ $user->name }}</option>
                                 @endforeach
                             </select>
                             <label id="select2-error" class="error" for="select2"></label>
@@ -117,6 +128,11 @@
 
     $("#user_id").select2({
       placeholder: "Select a team members",
+      allowClear: false
+    });
+
+    $("#user_backup_id").select2({
+      placeholder: "Select a team backup members",
       allowClear: false
     });
 

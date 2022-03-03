@@ -46,6 +46,16 @@
                             </select>
                             <label id="select2-error" class="error" for="select2"></label>
                         </div>
+
+                        <div class="form-group">
+                            <label>Team Backup Members</label>
+                            <select class="form-control select2" id="user_backup_id" name="user_backup_id[]" required autocomplete="user_backup_id" multiple>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                            <label id="select2-error" class="error" for="select2"></label>
+                        </div>
                         <button type="submit" class="btn btn-primary">Create</button>
                         <a href="" class="btn btn-secondary"  data-dismiss="modal">Close</a>
                     </form>
@@ -117,6 +127,11 @@
 
     $("#user_id").select2({
       placeholder: "Select a team members",
+      allowClear: false
+    });
+
+    $("#user_backup_id").select2({
+      placeholder: "Select a team backup members",
       allowClear: false
     });
 

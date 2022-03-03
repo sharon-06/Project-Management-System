@@ -36,10 +36,21 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Description</label>
+                        <label>Team Backup Member</label>
                         <div class="avatars_overlapping ml-4">
-                            {!!$team->description?$team->description : 'no description'!!}
+                            @foreach($team->backup as $teamBackupMember)
+                                <span class="avatar_overlapping">
+                                    <p tooltip="{{$teamBackupMember->name}}" flow="up">
+                                        <img src="{{$teamBackupMember->getImageUrlAttribute($teamBackupMember->id)}}" width="50" height="50">
+                                    </p>
+                                </span>
+                            @endforeach
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        {!!$team->description?$team->description : 'no description'!!}
                     </div>
                 </div>
                 <!-- /.card-body -->

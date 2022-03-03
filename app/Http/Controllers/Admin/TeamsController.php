@@ -75,6 +75,7 @@ class TeamsController extends Controller
             $teams->save();
 
             $teams->users()->attach($request->user_id);
+            $teams->backup()->attach($request->user_backup_id);
 
             //Session::flash('success', 'Team was created successfully.');
             //return redirect()->route('teams.index');
@@ -119,18 +120,12 @@ class TeamsController extends Controller
             $branch_id = auth()->user()->getBranchIdsAttribute();
             $users = User::select('id', 'name')->whereHas('branches', function($q) use ($branch_id) { $q->whereIn('branch_id', $branch_id); })->get();
         }else{
-            $users = User::pluck('id', 'name')->toArray();
+            $users = User::all();
         }
 
         $teamUsers = $team->users->pluck('id')->toArray();
-        if(!auth()->user()->hasRole('superadmin')){
-            $branch_id = auth()->user()->getBranchIdsAttribute();
-            $users = User::select('id', 'name')->whereHas('branches', function($q) use ($branch_id) { $q->whereIn('branch_id', $branch_id); })->get();
-        }else{
-            $users = User::all('id', 'name');
-        }
-
-        return view('admin.team.edit', compact('team','users', 'teamUsers'));
+        $teamUsersBackup = $team->backup->pluck('id')->toArray();
+        return view('admin.team.edit', compact('team','users', 'teamUsers', 'teamUsersBackup'));
     }
 
     /**
@@ -160,6 +155,7 @@ class TeamsController extends Controller
             $team->users()->detach();
 
             $team->users()->syncWithoutDetaching($request->user_id);
+            $team->backup()->syncWithoutDetaching($request->user_backup_id);
             //Session::flash('success', 'A Wiki Blog updated successfully.');
             //return redirect('admin/wikiBlog');
 
