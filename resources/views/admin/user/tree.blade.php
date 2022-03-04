@@ -53,6 +53,7 @@
                             @endforeach
                         </div><br>
 
+                        @if(count($team->backup)>0)
                         <span class="small text-uppercase text-muted">Backup Member</span><br>
                         <div class="avatars_overlapping">
                             @foreach($team->backup as $teamMemberBackup)
@@ -63,7 +64,12 @@
                                 </span>
                             @endforeach
                         </div>
-
+                        @else
+                            <span class="small text-uppercase text-muted">Backup Member</span><br>
+                            <div class="avatars_overlapping">
+                                No Backup Member
+                            </div>
+                        @endif
                         <p class="card-text mt-2"></p>
                         @can('edit Team')
                         <a href="{{ route('admin.team.edit', ['team' => $team->id]) }}" class="btn btn-success ml-1" id="popup-modal-button" data-original-title="" title=""><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>

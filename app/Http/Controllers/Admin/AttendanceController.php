@@ -66,23 +66,32 @@ class AttendanceController extends Controller
 
         if ($request->ajax() == true) {
 
-            
-            /*if(!auth()->user()->hasRole('superadmin')){
-                $branch_id = auth()->user()->getBranchIdsAttribute();
-                $model = Attendance::where('status','punch_in')->with('branch','creator','editor','punch_out')->whereHas('branch', function($q) use ($branch_id) { 
-                                            $q->whereIn('branch_id', $branch_id); });
-            }else{
-               $model = Attendance::where('status','punch_in')->with('branch','creator','editor','punch_out');
-            }*/
+            $model = Attendance::where('status','punch_in')->with('branch','creator','editor','punch_out');
+            if(isset($request->user_id) && $request->user_id != 'All'){
+                $model = $model->where('created_by',str_replace("user_id_","",$request->user_id));
+            }
+
+            if(isset($request->branch) && $request->branch != 'All'){
+                $branch = $request->branch;
+                $model = $model->whereHas('branch', function($q) use ($branch) { 
+                                            $q->where('branch_id', $branch); });
+            }
+
+            if(isset($request->daterange) && $request->daterange != ''){
+                $daterange = explode(" - ",$request->daterange);
+                $startDate = Carbon::parse($daterange[0])->toDateTimeString();
+                $endDate = Carbon::parse($daterange[1])->toDateTimeString();
+                $model = $model->whereBetween('attendance_at', [$startDate,$endDate]);
+            }
 
             if(auth()->user()->hasRole('superadmin')){
-                $model = Attendance::where('status','punch_in')->with('branch','creator','editor','punch_out');
+                $model = $model;
             }elseif(auth()->user()->hasRole('Team Leader')){
                 $child_id = auth()->user()->children()->pluck('id')->toArray();
-                $model = Attendance::where('status','punch_in')->whereIn('created_by',$child_id)->with('branch','creator','editor','punch_out');
+                $model = $model->whereIn('created_by',$child_id);
             }else{
                 $branch_id = auth()->user()->getBranchIdsAttribute();
-                $model = Attendance::where('status','punch_in')->with('branch','creator','editor','punch_out')->whereHas('branch', function($q) use ($branch_id) { 
+                $model = $model->whereHas('branch', function($q) use ($branch_id) { 
                                             $q->whereIn('branch_id', $branch_id); });
             }
             
@@ -100,18 +109,20 @@ class AttendanceController extends Controller
                         return $html; 
                     })
 
-                    ->addColumn('punch_in', function (Attendance $data) {
-                        $status='<span class="text-success"><i class="fas fa-sign-in-alt"></i></span> In at'; 
-                            return $status .' '. date_format (date_create($data->attendance_at), "g:ia").' On '.date_format (date_create($data->attendance_at), "l jS F Y");
+                    ->addColumn('punch_in_date', function (Attendance $data) {
+                        return date_format (date_create($data->attendance_at), "l, M d Y");
                         
+                    })
+
+                    ->addColumn('punch_in', function (Attendance $data) {
+                        return date_format (date_create($data->attendance_at), "g:i A");
                     })
 
                     ->addColumn('punch_out', function (Attendance $data) {
                         if($data->punch_out==null){
                             return 'To be continue..';
                         }else{
-                            $status='<span class="text-danger"><i class="fas fa-sign-out-alt"></i></span> Out at'; 
-                            return $status .' '. date_format (date_create($data->punch_out->attendance_at), "g:ia").' On '.date_format (date_create($data->punch_out->attendance_at), "l jS F Y");
+                            return date_format (date_create($data->punch_out->attendance_at), "g:i A");
                         }
                         
                         
@@ -122,8 +133,10 @@ class AttendanceController extends Controller
                         }else{
                             $startTime = Carbon::parse($data->attendance_at);
                             $endTime = Carbon::parse($data->punch_out->attendance_at);
-                            $totalDuration =  $startTime->diff($endTime)->format('%H:%I:%S')." Minutes";
-                            return $totalDuration;
+                            $totalDuration            = $endTime->diffInMinutes($startTime, true)/60;
+                            
+                            //$totalDuration =  $startTime->diff($endTime)->format('%H:%I:%S')." Minutes";
+                            return number_format($totalDuration,2,".","");
                         }
                         
                         
@@ -144,7 +157,7 @@ class AttendanceController extends Controller
                         return '<img src="'.$data->editor->getImageUrlAttribute($data->editor->id).'" alt="Admin" class="profile-user-img-small img-circle"> '. $data->editor->name;
                     })
                     
-                    ->rawColumns(['punch_in', 'punch_out', 'username', 'editor', 'action'])
+                    ->rawColumns(['punch_in_date', 'punch_in', 'punch_out', 'username', 'editor', 'action'])
 
                     ->make(true);
         }

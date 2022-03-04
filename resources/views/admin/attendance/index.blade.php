@@ -57,7 +57,7 @@
                                 <select class="select2 form-control" id="branch" name="branch" required autocomplete="branch">
                                     <option value="All">All</option>
                                     @foreach ($branches as $key => $branch)
-                                        <option value="{{ $branch->company->name }} - {{ $branch->name }}">{{ $branch->company->name }} - {{ $branch->name }}</option>
+                                        <option value="{{ $branch->id}}">{{ $branch->company->name }} - {{ $branch->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -75,6 +75,7 @@
                         <table class="table table-hover dataTable no-footer" id="table" width="100%">
                             <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Punch In</th>
                                 <th>Punch Out</th>
                                 <th>Total Hrs.</th>
@@ -102,8 +103,10 @@
 
 
 <script>
-function datatables() {
-
+function datatables(i) {
+    var user_id = $('#user_id').val();
+    var branch = $('#branch').val();
+    var daterange = $('#daterange').val();
     var table = $('#table').DataTable({
         dom: 'Rltipr',
         buttons: [],
@@ -117,14 +120,21 @@ function datatables() {
         pagingType    : "full_numbers",
         "bLengthChange": false,
 
-        /*"processing": true, // Make this true, to show the "Processing" word while loading
-        "serverSide": true,*/
+        "processing": true, // Make this true, to show the "Processing" word while loading
+        "serverSide": true,
 
         ajax          : {
             url     : '{{ url('admin/attendance/ajax/data') }}',
-            dataType: 'json'
+            dataType: 'json',
+            data: {
+                "user_id": user_id,
+                "branch": branch,
+                "daterange": daterange
+            },
         },
         columns       : [
+        
+            {data: 'punch_in_date', name: 'punch_in_date'},
             {data: 'punch_in', name: 'punch_in'},
             {data: 'punch_out', name: 'punch_out'},
             {data: 'total_hrs', name: 'total_hrs'},
@@ -144,7 +154,7 @@ function datatables() {
         ],
     });
 
-    $('#user_id').on('change', function () {
+    /*$('#user_id').on('change', function () {
         if(this.value != 'All'){
             table.columns(9).search( this.value ).draw();
         }else{
@@ -188,28 +198,48 @@ function datatables() {
             if(this.value == ''){
                 table.search( '' ).columns().search( '' ).draw();
             }
-    });
+    });*/
 
-    $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
-          $(this).val('');
-          location.reload();
-    });
-
-    $('#Clear_Filters').click(function () {
-        $('#Clear_Filters').attr("disabled", true);
-        $('input[name="datefilter"]').val('');
-        $('#user_id').val(null).trigger('change');
-        $('#branch').val(null).trigger('change');
-        location.reload();
-    });
+    if(i==1){
+      table.page('first').draw('page');  
+    }
     
 }
 
-datatables();
+datatables(1);
+
+$('#user_id').on('change', function () {
+    datatables(0);
+});
+
+$('#branch').on('change', function () {
+    datatables(0);
+});
+
+$('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+        minDateFilter = Date.parse(picker.startDate);
+        maxDateFilter = Date.parse(picker.endDate);
+        datatables(0);
+});
 
 $('input[name="datefilter"]').daterangepicker({
   autoUpdateInput: false,   
 });
+
+$('#Clear_Filters').click(function () {
+    $('#Clear_Filters').attr("disabled", true);
+    $('input[name="datefilter"]').val('');
+    $('#user_id').val(null).trigger('change');
+    $('#branch').val(null).trigger('change');
+    datatables(0);
+});
+
+$('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+      $(this).val('');
+      datatables(0);
+});
+
 
 $("#user_id").select2({
   placeholder: "select users",

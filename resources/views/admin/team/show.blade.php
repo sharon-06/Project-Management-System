@@ -37,6 +37,7 @@
 
                     <div class="form-group">
                         <label>Team Backup Member</label>
+                        @if(count($team->backup)>0)
                         <div class="avatars_overlapping ml-4">
                             @foreach($team->backup as $teamBackupMember)
                                 <span class="avatar_overlapping">
@@ -46,6 +47,11 @@
                                 </span>
                             @endforeach
                         </div>
+                        @else
+                        <div class="avatars_overlapping ml-4">
+                            No Backup Member
+                        </div>
+                        @endif
                     </div>
 
                     <div class="form-group">

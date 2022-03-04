@@ -63,9 +63,10 @@ class ReportController extends Controller
             $daterange = $request->daterange;
             if($daterange!=null || $daterange!='' ){
                 $dates = explode(" - ", $daterange);
-                $startDate = Carbon::createFromFormat('d/m/Y', Carbon::parse($dates[0])->format('d/m/Y'));
-                $endDate = Carbon::createFromFormat('d/m/Y', Carbon::parse($dates[1])->format('d/m/Y'));
-                
+                //$startDate = Carbon::createFromFormat('d/m/Y', Carbon::parse($dates[0])->format('d/m/Y'));
+                //$endDate = Carbon::createFromFormat('d/m/Y', Carbon::parse($dates[1])->format('d/m/Y'));
+                $startDate = Carbon::parse($dates[0])->toDateTimeString();
+                $endDate = Carbon::parse($dates[1])->toDateTimeString();
                 //dd($endDate);
                 if(auth()->user()->hasRole('superadmin')){
                     $model = User::with(['attendance_creator' => function($query) use ($startDate,$endDate) {
