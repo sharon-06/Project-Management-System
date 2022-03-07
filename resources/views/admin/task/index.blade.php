@@ -50,7 +50,7 @@
                                 <th>Status</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>
-                                <th class="noExport" style="width: 100px;">Action</th>
+                                <th class="noExport" style="width: 120px;">Action</th>
                             </tr>
                             </thead>
                             <tbody></tbody>

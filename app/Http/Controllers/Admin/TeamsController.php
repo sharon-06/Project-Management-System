@@ -154,8 +154,8 @@ class TeamsController extends Controller
             $team->save();
             $team->users()->detach();
 
-            $team->users()->syncWithoutDetaching($request->user_id);
-            $team->backup()->syncWithoutDetaching($request->user_backup_id);
+            $team->users()->sync($request->user_id);
+            $team->backup()->sync($request->user_backup_id);
             //Session::flash('success', 'A Wiki Blog updated successfully.');
             //return redirect('admin/wikiBlog');
 

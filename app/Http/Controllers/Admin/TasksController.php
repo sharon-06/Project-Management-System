@@ -122,11 +122,15 @@ class TasksController extends Controller
                     
                     $html='';
                     if (auth()->user()->can('edit Task')){
-                        $html.= '<a href="'.  route('admin.task.edit', ['task' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-3"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
+                        $html.= '<a href="'.  route('admin.task.edit', ['task' => $data->id]) .'" class="btn btn-success btn-sm float-left mr-1"  id="popup-modal-button"><span tooltip="Edit" flow="left"><i class="fas fa-edit"></i></span></a>';
                     }
 
                     if (auth()->user()->can('delete Task')){
-                        $html.= '<form method="post" class="float-left delete-form" action="'.  route('admin.task.destroy', ['task' => $data->id ]) .'"><input type="hidden" name="_token" value="'. Session::token() .'"><input type="hidden" name="_method" value="delete"><button type="submit" class="btn btn-danger btn-sm"><span tooltip="Delete" flow="up"><i class="fas fa-trash"></i></span></button></form>';
+                        $html.= '<form method="post" class="float-left delete-formleft mr-1" action="'.  route('admin.task.destroy', ['task' => $data->id ]) .'"><input type="hidden" name="_token" value="'. Session::token() .'"><input type="hidden" name="_method" value="delete"><button type="submit" class="btn btn-danger btn-sm"><span tooltip="Delete" flow="up"><i class="fas fa-trash"></i></span></button></form>';
+                    }
+
+                    if (auth()->user()->can('view Task')){
+                        $html.= '<a href="'.  route('admin.task.show', ['task' => $data->id]) .'" id="popup-modal-button"  class="btn btn-danger btn-sm"><span tooltip="View" flow="up"><i class="fas fa-eye"></i></span></a>';
                     }
 
                     return $html; 
@@ -205,7 +209,20 @@ class TasksController extends Controller
      */
     public function show(tasks $task)
     {
-        //
+        $data = tasks::with([
+                            'users',
+                            'Tasks_has_taskstatus' => function ($query) { 
+                                    $query->orderBy('created_at', 'desc')
+                                            ->whereDate('created_at', Carbon::today())
+                                            ->with('creator','taskStatus');
+                                    },
+                            'taskStatus' => function ($query) { 
+                                    $query->orderBy('pivot_created_at', 'desc')->first();
+                            }
+                            ])
+                    ->where('id',$task->id)
+                    ->first();
+        return view('admin.task.show', compact('data'));
     }
 
     /**

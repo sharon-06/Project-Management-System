@@ -122,7 +122,12 @@ class AttendanceController extends Controller
                         if($data->punch_out==null){
                             return 'To be continue..';
                         }else{
-                            return date_format (date_create($data->punch_out->attendance_at), "g:i A");
+                            if(date_format (date_create($data->attendance_at), "l, M d Y") == date_format (date_create($data->punch_out->attendance_at), "l, M d Y")){
+                                return date_format (date_create($data->punch_out->attendance_at), "g:i A");
+                            }else{
+                                return date_format (date_create($data->punch_out->attendance_at), "l, M d Y, g:i A");
+                            }
+                            
                         }
                         
                         
@@ -133,7 +138,7 @@ class AttendanceController extends Controller
                         }else{
                             $startTime = Carbon::parse($data->attendance_at);
                             $endTime = Carbon::parse($data->punch_out->attendance_at);
-                            $totalDuration            = $endTime->diffInMinutes($startTime, true)/60;
+                            $totalDuration = $endTime->diffInMinutes($startTime, true)/60;
                             
                             //$totalDuration =  $startTime->diff($endTime)->format('%H:%I:%S')." Minutes";
                             return number_format($totalDuration,2,".","");
