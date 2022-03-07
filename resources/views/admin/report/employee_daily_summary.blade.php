@@ -108,7 +108,7 @@ function datatables() {
         responsive    : true,
         fixedHeader   : true,
         processing    : true,
-        serverSide    : false,
+        serverSide    : true,
         "bDestroy"    : true,
         pagingType    : "full_numbers",
         "bLengthChange": false,

@@ -142,7 +142,6 @@ class ReportController extends Controller
                         
                     })
                     
-                    
                     ->rawColumns(['total_hrs', 'username', 'branch', 'search_username'])
 
                     ->make(true);

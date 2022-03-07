@@ -135,7 +135,7 @@ class TasksController extends Controller
                     }
 
                     return $html; 
-                })
+            
 
                 ->rawColumns(['users_avatars', 'action', 'taskAccepted','status'])
                 ->make(true);
