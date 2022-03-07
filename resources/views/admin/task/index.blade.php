@@ -45,6 +45,7 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Title</th>
+                                <th>Recurring</th>
                                 <th>Allocate User</th>
                                 <th>Task Accepted</th>
                                 <th>Status</th>
@@ -90,6 +91,7 @@ function datatables() {
         columns       : [
             {data: 'id', name: 'id', visible: false},
             {data: 'title', name: 'title'},
+            {data: 'recurring', name: 'recurring'},
             {data: 'users_avatars', name: 'users_avatars'},
             {data: 'taskAccepted', name: 'taskAccepted'},
             {data: 'status', name: 'status'},

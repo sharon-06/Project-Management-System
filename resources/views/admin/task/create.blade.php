@@ -44,6 +44,16 @@
                             </select>
                             <label id="select2-error" class="error" for="select2"></label>
                         </div>
+
+                        <div class="form-group">
+                            <label>Recurring</label>
+                            <select class="form-control select2" id="recurring" name="recurring" required autocomplete="recurring">
+                                @foreach ($recurring as $recurring)
+                                    <option value="{{ $recurring }}">{{ $recurring }}</option>
+                                @endforeach
+                            </select>
+                            <label id="select2-error" class="error" for="select2"></label>
+                        </div>
                         <button type="submit" class="btn btn-primary">Create</button>
                         <a href="" class="btn btn-secondary"  data-dismiss="modal">Close</a>
                     </form>

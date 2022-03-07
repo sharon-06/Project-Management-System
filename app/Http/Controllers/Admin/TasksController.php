@@ -53,6 +53,7 @@ class TasksController extends Controller
             $data = tasks::select([
                                         'id',
                                         'title',
+                                        'recurring',
                                         'created_at',
                                         'updated_at',
                                     ])
@@ -157,7 +158,9 @@ class TasksController extends Controller
             $users = User::all('id', 'name');
         }
 
-        return view('admin.task.create', compact("tasks","users"));
+        $recurring = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly', 'Quarterly', 'Yearly'];
+
+        return view('admin.task.create', compact("tasks","users","recurring"));
     }
 
     /**
@@ -173,6 +176,7 @@ class TasksController extends Controller
             $tasks = new tasks();
             $tasks->title = $request->title;
             $tasks->description = $request->description;
+            $tasks->recurring = $request->recurring;
             $tasks->created_by = auth()->user()->id;
             $tasks->updated_by = auth()->user()->id;
             $tasks->save();
@@ -243,8 +247,8 @@ class TasksController extends Controller
         $taskUsers = $task->users->pluck('id')->toArray();
         $users = array_filter(array_replace(array_fill_keys($taskUsers, null), array_flip($users)));
         $users = array_flip($users);
-
-        return view('admin.task.edit', compact('task','users', 'taskUsers'));
+        $recurring = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly', 'Quarterly', 'Yearly'];
+        return view('admin.task.edit', compact('task','users', 'taskUsers', 'recurring'));
     }
 
     /**
@@ -268,6 +272,7 @@ class TasksController extends Controller
 
             $task->title = $request->title;
             $task->description = $request->description;
+            $task->recurring = $request->recurring;
             $task->updated_by = auth()->user()->id;
             $task->save();
             $task->users()->detach();
