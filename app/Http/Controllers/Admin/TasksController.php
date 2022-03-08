@@ -54,6 +54,7 @@ class TasksController extends Controller
                                         'id',
                                         'title',
                                         'recurring',
+                                        'due_date',
                                         'created_at',
                                         'updated_at',
                                     ])
@@ -82,7 +83,16 @@ class TasksController extends Controller
 
                     return $users.='</div>';
                 })
-
+                ->addColumn('due_date_status', function ($data) {
+                    if($data->recurring=='Daily'){
+                        $due_date_status = Carbon::now()->format('Y-m-d');
+                    }else{
+                        $due_date_status = $data->due_date;
+                    }
+                
+                    return $due_date_status;
+                    
+                })
                 ->addColumn('taskAccepted', function ($data) {
                     if(isset($data->Tasks_has_taskstatus[0]) && isset($data->Tasks_has_taskstatus[0]->creator)){
                         if($data->Tasks_has_taskstatus[0]->taskstatuses_id==1){
@@ -137,7 +147,7 @@ class TasksController extends Controller
                     return $html; 
                 
                 })
-                ->rawColumns(['users_avatars', 'action', 'taskAccepted','status'])
+                ->rawColumns(['users_avatars', 'due_date_status', 'action', 'taskAccepted','status'])
                 ->make(true);
         }
     }
@@ -177,6 +187,7 @@ class TasksController extends Controller
             $tasks->title = $request->title;
             $tasks->description = $request->description;
             $tasks->recurring = $request->recurring;
+            $tasks->due_date = $request->due_date;
             $tasks->created_by = auth()->user()->id;
             $tasks->updated_by = auth()->user()->id;
             $tasks->save();
@@ -237,15 +248,16 @@ class TasksController extends Controller
      */
     public function edit(tasks $task)
     {
+        $taskUsers = $task->users->pluck('id')->toArray();
         if(!auth()->user()->hasRole('superadmin')){
             $branch_id = auth()->user()->getBranchIdsAttribute();
             $users = User::whereHas('branches', function($q) use ($branch_id) { $q->whereIn('branch_id', $branch_id); })->get()->pluck('id', 'name');
+            $users = array_filter(array_replace(array_fill_keys($taskUsers, null), array_flip($users->toArray())));
         }else{
             $users = User::pluck('id', 'name')->toArray();
+            $users = array_filter(array_replace(array_fill_keys($taskUsers, null), array_flip($users)));
         }
 
-        $taskUsers = $task->users->pluck('id')->toArray();
-        $users = array_filter(array_replace(array_fill_keys($taskUsers, null), array_flip($users->toArray())));
         $users = array_flip($users);
         $recurring = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly', 'Quarterly', 'Yearly'];
         return view('admin.task.edit', compact('task','users', 'taskUsers', 'recurring'));
@@ -273,6 +285,7 @@ class TasksController extends Controller
             $task->title = $request->title;
             $task->description = $request->description;
             $task->recurring = $request->recurring;
+            $task->due_date = $request->due_date;
             $task->updated_by = auth()->user()->id;
             $task->save();
             $task->users()->detach();

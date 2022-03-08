@@ -19,7 +19,7 @@ class tasks extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'recurring', 'created_by', 'updated_by', 'created_at', 'updated_at'
+        'name', 'description', 'recurring', 'due_date', 'created_by', 'updated_by', 'created_at', 'updated_at'
     ];
 
 

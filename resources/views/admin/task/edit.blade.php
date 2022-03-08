@@ -47,6 +47,10 @@
                             </select>
                             <label id="select2-error" class="error" for="select2"></label>
                         </div>
+                        <div class="form-group">
+                            <label>Due Date</label>
+                            <input type="text" name="due_date" id="due_date" value="{{$task->due_date}}" class="form-control" required autocomplete="due_date" autofocus maxlength="60">
+                        </div>
                         <button type="submit" class="btn btn-primary">Update</button>
                         <a href="" class="btn btn-secondary"  data-dismiss="modal">Close</a>
                     </form>
