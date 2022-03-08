@@ -135,8 +135,8 @@ class TasksController extends Controller
                     }
 
                     return $html; 
-            
-
+                
+                })
                 ->rawColumns(['users_avatars', 'action', 'taskAccepted','status'])
                 ->make(true);
         }
@@ -239,13 +239,13 @@ class TasksController extends Controller
     {
         if(!auth()->user()->hasRole('superadmin')){
             $branch_id = auth()->user()->getBranchIdsAttribute();
-            $users = User::select('id', 'name')->whereHas('branches', function($q) use ($branch_id) { $q->whereIn('branch_id', $branch_id); })->get();
+            $users = User::whereHas('branches', function($q) use ($branch_id) { $q->whereIn('branch_id', $branch_id); })->get()->pluck('id', 'name');
         }else{
             $users = User::pluck('id', 'name')->toArray();
         }
 
         $taskUsers = $task->users->pluck('id')->toArray();
-        $users = array_filter(array_replace(array_fill_keys($taskUsers, null), array_flip($users)));
+        $users = array_filter(array_replace(array_fill_keys($taskUsers, null), array_flip($users->toArray())));
         $users = array_flip($users);
         $recurring = ['Daily', 'Weekly', 'Bi-Weekly', 'Monthly', 'Quarterly', 'Yearly'];
         return view('admin.task.edit', compact('task','users', 'taskUsers', 'recurring'));
