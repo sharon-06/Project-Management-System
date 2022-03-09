@@ -66,7 +66,7 @@ class AttendanceController extends Controller
 
         if ($request->ajax() == true) {
 
-            $model = Attendance::where('status','punch_in')->with('branch','creator','editor','punch_out');
+            $model = Attendance::where('status','punch_in')->where('created_by', '!=' , auth()->user()->id)->with('branch','creator','editor','punch_out');
             if(isset($request->user_id) && $request->user_id != 'All'){
                 $model = $model->where('created_by',str_replace("user_id_","",$request->user_id));
             }
