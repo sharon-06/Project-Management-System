@@ -76,6 +76,17 @@
                             <input type="hidden" name="parent_id" class="form-control" value="" required autocomplete="parent_id" autofocus maxlength="200">
                         @endif
 
+                        <div class="form-group">
+                            <label>Time Zone</label>
+                            <select class="form-control select2" id="timezone_id" name="timezone_id" required autocomplete="timezone_id">
+                                <option value=""></option>
+                                @foreach ($timezones as $timezone)
+                                    <option value="{{ $timezone->id }}" @if($timezone->id==$user->timezone_id) selected="selected" @endif>{{$timezone->name}}</option>
+                                @endforeach
+                            </select>
+                            <label id="select2-error" class="error" for="select2"></label>
+                        </div>
+
                          <div class="form-group">
                             <label>Remote Employee</label>
                             <select class="form-control select2" id="remote_employee" name="remote_employee" required autocomplete="remote_employee">
@@ -116,6 +127,11 @@
 
     $("#parent_id").select2({
       placeholder: "Select a parent user",
+      allowClear: true
+    });
+
+    $("#timezone_id").select2({
+      placeholder: "Select your time zone",
       allowClear: true
     });
 

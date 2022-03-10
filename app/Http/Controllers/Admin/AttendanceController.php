@@ -52,6 +52,7 @@ class AttendanceController extends Controller
             $branches = Branch::whereIn('id',$branch_id)->get();
             $users = User::whereHas('branches', function($q) use ($branch_id) { $q->whereIn('branch_id', $branch_id); })->get();
         }
+
         return view('admin.attendance.index', compact("users","branches"));
     }
 
@@ -110,12 +111,13 @@ class AttendanceController extends Controller
                     })
 
                     ->addColumn('punch_in_date', function (Attendance $data) {
-                        return date_format (date_create($data->attendance_at), "l, M d Y");
+                        return date_format(date_create($data->attendance_at), "l, M d Y");
                         
                     })
 
                     ->addColumn('punch_in', function (Attendance $data) {
-                        return date_format (date_create($data->attendance_at), "g:i A");
+                        return Carbon::createFromFormat('Y-m-d H:i:s', $data->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
+                        //return date_format(date_create($data->attendance_at), "g:i A");
                     })
 
                     ->addColumn('punch_out', function (Attendance $data) {
@@ -123,9 +125,11 @@ class AttendanceController extends Controller
                             return 'To be continue..';
                         }else{
                             if(date_format (date_create($data->attendance_at), "l, M d Y") == date_format (date_create($data->punch_out->attendance_at), "l, M d Y")){
-                                return date_format (date_create($data->punch_out->attendance_at), "g:i A");
+                                return Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
+                                //return date_format (date_create($data->punch_out->attendance_at), "g:i A");
                             }else{
-                                return date_format (date_create($data->punch_out->attendance_at), "l, M d Y, g:i A");
+                                return Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('l, M d Y, g:i A');
+                                //return date_format (date_create($data->punch_out->attendance_at), "l, M d Y, g:i A");
                             }
                             
                         }
@@ -542,7 +546,7 @@ class AttendanceController extends Controller
 
         if ($request->ajax() == true) {
             
-            $model = Attendance::with('branch','creator','editor')->where('created_by',auth()->user()->id);
+            $model = Attendance::where('status','punch_in')->where('created_by',auth()->user()->id)->with('branch','creator','editor');
             
             return Datatables::eloquent($model)
                     /*->addColumn('action', function (Attendance $data) {
@@ -557,6 +561,33 @@ class AttendanceController extends Controller
 
                         return $html; 
                     })*/
+
+                    ->addColumn('punch_in_date', function (Attendance $data) {
+                        return date_format(date_create($data->attendance_at), "l, M d Y");
+                        
+                    })
+
+                    ->addColumn('punch_in', function (Attendance $data) {
+                        return Carbon::createFromFormat('Y-m-d H:i:s', $data->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
+                        //return date_format(date_create($data->attendance_at), "g:i A");
+                    })
+
+                    ->addColumn('punch_out', function (Attendance $data) {
+                        if($data->punch_out==null){
+                            return 'To be continue..';
+                        }else{
+                            if(date_format (date_create($data->attendance_at), "l, M d Y") == date_format (date_create($data->punch_out->attendance_at), "l, M d Y")){
+                                return Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
+                                //return date_format (date_create($data->punch_out->attendance_at), "g:i A");
+                            }else{
+                                return Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('l, M d Y, g:i A');
+                                //return date_format (date_create($data->punch_out->attendance_at), "l, M d Y, g:i A");
+                            }
+                            
+                        }
+                        
+                        
+                    })
 
                     ->addColumn('activity', function (Attendance $data) {
                         if($data->status=='punch_in'){ $status='<span class="text-success"><i class="fas fa-sign-in-alt"></i></span> In at'; }else{ $status='<span class="text-danger"><i class="fas fa-sign-out-alt"></i></span> Out at'; }
@@ -578,7 +609,7 @@ class AttendanceController extends Controller
                         return '<img src="'.$data->editor->getImageUrlAttribute($data->editor->id).'" alt="Admin" class="profile-user-img-small img-circle"> '. $data->editor->name;
                     })
                     
-                    ->rawColumns(['activity', 'username', 'editor', 'action'])
+                    ->rawColumns(['punch_in_date', 'punch_in', 'punch_out', 'activity', 'username', 'editor', 'action'])
 
                     ->make(true);
         }

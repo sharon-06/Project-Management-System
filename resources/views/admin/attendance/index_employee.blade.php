@@ -52,7 +52,10 @@
                         <table class="table table-hover dataTable no-footer" id="table" width="100%">
                             <thead>
                             <tr>
-                                <th>Activity</th>
+                                <!-- <th>Activity</th> -->
+                                <th>Date</th>
+                                <th>Punch In</th>
+                                <th>Punch Out</th>
                                 <th>Company - Branch</th>
                                 <th>User Name</th>
                                 <th>Last Edit By</th>
@@ -97,7 +100,10 @@ function datatables() {
             dataType: 'json'
         },
         columns       : [
-            {data: 'activity', name: 'activity'},
+            /*{data: 'activity', name: 'activity'},*/
+            {data: 'punch_in_date', name: 'punch_in_date'},
+            {data: 'punch_in', name: 'punch_in'},
+            {data: 'punch_out', name: 'punch_out'},
             {data: 'branch', name: 'branch'},
             {data: 'username', name: 'username'},
             {data: 'editor', name: 'editor', visible: false},

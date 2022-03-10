@@ -21,7 +21,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'biography', 'dateOfBirth', 'email', 'password', 'parent_id', 'position', 'remote_employee'
+        'name', 'biography', 'dateOfBirth', 'email', 'password', 'parent_id', 'timezone_id', 'position', 'remote_employee'
     ];
 
     /**
@@ -203,6 +203,14 @@ class User extends Authenticatable
     public function tasks()
     {
         return $this->belongsToMany(tasks::class, 'User_has_tasks', 'user_id', 'task_id');
+    }
+
+    /**
+     * Get the parent user of this user.
+     */
+    public function timezone()
+    {
+        return $this->belongsTo(Timezone::class, 'timezone_id');
     }
 
 }

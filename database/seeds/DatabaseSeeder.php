@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -24,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(HolidaysHasBranchesSeeder::class);
         $this->call(RotaTemplateSeeder::class);
         $this->call(TaskStatusSeeder::class);
+        $this->call(TimezoneSeeder::class);
         
     }
 }

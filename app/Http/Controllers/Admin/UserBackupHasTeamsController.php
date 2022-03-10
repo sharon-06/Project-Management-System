@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\User_Backup_has_teams;
 use App\Http\Requests\StoreUser_Backup_has_teamsRequest;

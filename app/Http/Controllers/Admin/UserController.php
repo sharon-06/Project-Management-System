@@ -11,6 +11,7 @@ use App\Attendance;
 use App\Leave;
 use App\Rota;
 use App\teams;
+use App\Timezone;
 
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -65,7 +66,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'id');
-        
+        $timezones = Timezone::Orderby('offset')->get();
         // Where condition on Role and Branch, If role super admin then show all records, other than only user branch records show.
         if(!auth()->user()->hasRole('superadmin')){
             $branch_id = auth()->user()->getBranchIdsAttribute();
@@ -77,12 +78,12 @@ class UserController extends Controller
         $departments = Department::all();
 
         $parents = User::all();
-        return view('admin.user.create', compact('roles', 'branches', 'departments', 'parents'));
+        return view('admin.user.create', compact('roles', 'branches', 'departments', 'parents', 'timezones'));
     }
 
     public function store(UserStoreRequest $request)
     {
-        $input = $request->only('name', 'email', 'password', 'parent_id', 'position', 'remote_employee');
+        $input = $request->only('name', 'email', 'password', 'parent_id', 'timezone_id', 'position', 'remote_employee');
         $input['password'] = bcrypt($request->password);
         $user = User::create($input);
         $user->assignRole($request->role);
@@ -103,6 +104,9 @@ class UserController extends Controller
     {
         $roles = Role::pluck('name', 'id');
         $userRole = $user->getRoleNames()->first();
+
+
+        $timezones = Timezone::Orderby('offset')->get();
         // Where condition on Role and Branch, If role super admin then show all records, other than only user branch records show.
         if(!auth()->user()->hasRole('superadmin')){
             $branch_id = auth()->user()->getBranchIdsAttribute();
@@ -115,12 +119,14 @@ class UserController extends Controller
         $userDepartments = $user->departments->pluck('id')->toArray();
 
         $parents = User::where('id', '!=' , $user->id)->get();
-        return view('admin.user.edit', compact('user', 'roles', 'userRole', 'branches', 'userBranches', 'departments', 'userDepartments', 'parents'));
+        return view('admin.user.edit', compact('user', 'roles', 'userRole', 'branches', 'userBranches', 'departments', 'userDepartments', 'parents', 'timezones'));
     }
 
     public function update(UserUpdateRequest $request, User $user)
     {
-        $input = $request->only('name', 'email', 'parent_id', 'position', 'remote_employee');
+
+        $input = $request->only('name', 'email', 'parent_id', 'timezone_id', 'position', 'remote_employee');
+        
         if($request->filled('password')) {
             $input['password'] = bcrypt($request->password);
         }
