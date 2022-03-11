@@ -237,9 +237,58 @@ class TasksController extends Controller
                             ])
                     ->where('id',$task->id)
                     ->first();
-        return view('admin.task.show', compact('data'));
+
+        $task_history = tasks::with(['Tasks_has_taskstatus' => function ($query) { 
+                                    $query->orderBy('created_at', 'desc')
+                                            ->with('creator','taskStatus');
+                                    }])
+                    ->where('id',$task->id)
+                    ->first();
+
+        return view('admin.task.show', compact('data','task_history'));
     }
 
+
+    /**
+     * Datatables Ajax Data
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function datatables_task_history(Request $request)
+    {
+
+        if ($request->ajax() == true) {
+
+            $data = Tasks_has_taskstatus::where('task_id',$request->task_id)->whereNotNull('created_by')->orderBy('created_at', 'desc')->with('creator','taskStatus');
+                                    //->get();
+                                    //dd($data);
+            
+            return Datatables::eloquent($data)
+                ->addColumn('data_created_at', function($data) {
+                    return Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at);
+                })
+                /*->addColumn('data_updated_at', function($data) {
+                    return Carbon::createFromFormat('Y-m-d H:i:s', $data->updated_at);
+                })*/
+                ->addColumn('taskAccepted', function ($data) {
+
+                    return $taskAccepted = '<img src="'.$data->creator->getImageUrlAttribute($data->creator->id).'" alt="user_id_'.$data->creator->id.'" class="profile-user-img-small img-circle"> '. $data->creator->name;
+                    
+                })
+                ->addColumn('status', function ($data) {
+                        $taskActiveStatus = $data->taskStatus->name;
+                        $currentStatusID = $data->taskStatus->id;
+                        $class =$data->taskStatus->class;
+
+                        return $Status= '<div class="dropdown action-label">
+                                <i class="fa fa-dot-circle-o '.$class.'"></i> '.$taskActiveStatus.'</div>';
+                })
+                
+                ->rawColumns(['taskAccepted','status'])
+                ->make(true);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *

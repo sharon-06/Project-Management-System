@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label>Assigned Employee</label>
                         <div class="avatars_overlapping ml-4">
-                            @foreach($data->users as $teamMember)
+                            @foreach($data->users->reverse() as $teamMember)
                                 <span class="avatar_overlapping">
                                     <p tooltip="{{$teamMember->name}}" flow="up">
                                         <img src="{{$teamMember->getImageUrlAttribute($teamMember->id)}}" width="50" height="50">
@@ -47,10 +47,61 @@
                         <label>Description</label>
                         {!!$data->description?$data->description : 'no description'!!}
                     </div>
+
+                    <div class="form-group">
+                        <label>Task History</label>
+                        <table class="table table-hover dataTable no-footer" id="table_task_history" width="100%">
+                            <thead>
+                            <tr>
+                                <th>Task Accepted User</th>
+                                <th>Status</th>
+                                <th>Created At</th>
+                                <!-- <th>Updated At</th> -->
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
                 </div>
                 <!-- /.card-body -->
             </div>
         </div>
     </div>
 </div>
+<script>
+function datatables() {
+
+    var table = $('#table_task_history').DataTable({
+        dom: 'RBfrtip',
+        buttons: [],
+        select: true,
+        
+        aaSorting     : [[0, 'asc']],
+        iDisplayLength: 25,
+        stateSave     : true,
+        responsive    : true,
+        fixedHeader   : true,
+        processing    : true,
+        serverSide    : true,
+        "bDestroy"    : true,
+        pagingType    : "full_numbers",
+        ajax          : {
+            url     : '{{ url('admin/task/ajax/datatables_task_history') }}',
+            dataType: 'json',
+            data: {
+                "task_id": {{$data->id}}
+            },
+        },
+        columns       : [
+            {data: 'taskAccepted', name: 'taskAccepted'},
+            {data: 'status', name: 'status'},
+            {data: 'data_created_at', name: 'data_created_at'},
+            /*{data: 'data_updated_at', name: 'data_updated_at'},*/
+        ],
+    });
+}
+
+datatables()
+</script>
 @endsection

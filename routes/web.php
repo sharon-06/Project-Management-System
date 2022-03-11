@@ -160,6 +160,7 @@ Route::group([
     // Task Routes
     Route::resource('task', 'TasksController')->parameters(['task' => 'task']);
     Route::get('task/ajax/data', 'TasksController@datatables'); // For Datatables
+    Route::get('task/ajax/datatables_task_history', 'TasksController@datatables_task_history'); // For Datatables
     Route::get('task/ajax/change_status', 'TasksController@change_status')->name('task.ajax.change_status'); // For change status
 
     // Team Routes
