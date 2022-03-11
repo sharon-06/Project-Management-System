@@ -18,6 +18,8 @@ class CreateTimezonesTable extends Migration
             $table->string('name');
             $table->string('offset');
             $table->string('diff_from_gtm');
+            $table->string('country_code')->nullable();
+            $table->string('country_name')->nullable();
             $table->timestamps();
         });
     }

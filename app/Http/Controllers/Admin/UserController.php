@@ -66,7 +66,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'id');
-        $timezones = Timezone::Orderby('offset')->get();
+        $timezones = Timezone::Orderby('country_name')->get();
         // Where condition on Role and Branch, If role super admin then show all records, other than only user branch records show.
         if(!auth()->user()->hasRole('superadmin')){
             $branch_id = auth()->user()->getBranchIdsAttribute();
@@ -106,7 +106,7 @@ class UserController extends Controller
         $userRole = $user->getRoleNames()->first();
 
 
-        $timezones = Timezone::Orderby('offset')->get();
+        $timezones = Timezone::Orderby('country_name')->get();
         // Where condition on Role and Branch, If role super admin then show all records, other than only user branch records show.
         if(!auth()->user()->hasRole('superadmin')){
             $branch_id = auth()->user()->getBranchIdsAttribute();

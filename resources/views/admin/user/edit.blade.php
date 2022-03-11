@@ -81,7 +81,7 @@
                             <select class="form-control select2" id="timezone_id" name="timezone_id" required autocomplete="timezone_id">
                                 <option value=""></option>
                                 @foreach ($timezones as $timezone)
-                                    <option value="{{ $timezone->id }}" @if($timezone->id==$user->timezone_id) selected="selected" @endif>{{$timezone->name}}</option>
+                                    <option value="{{ $timezone->id }}" @if($timezone->id==$user->timezone_id) selected="selected" @endif>{{$timezone->country_name}} - {{$timezone->name}}</option>
                                 @endforeach
                             </select>
                             <label id="select2-error" class="error" for="select2"></label>

@@ -116,7 +116,7 @@ class AttendanceController extends Controller
                     })
 
                     ->addColumn('punch_in', function (Attendance $data) {
-                        return Carbon::createFromFormat('Y-m-d H:i:s', $data->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
+                        return '<a href="http://maps.google.com/maps?q='.$data->latitude.','.$data->longitude.'" target="_blanck"><i class="fas fa-globe-asia"></i></a> '. Carbon::createFromFormat('Y-m-d H:i:s', $data->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
                         //return date_format(date_create($data->attendance_at), "g:i A");
                     })
 
@@ -125,10 +125,10 @@ class AttendanceController extends Controller
                             return 'To be continue..';
                         }else{
                             if(date_format (date_create($data->attendance_at), "l, M d Y") == date_format (date_create($data->punch_out->attendance_at), "l, M d Y")){
-                                return Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
+                                return '<a href="http://maps.google.com/maps?q='.$data->punch_out->latitude.','.$data->punch_out->longitude.'" target="_blanck"><i class="fas fa-globe-asia"></i></a> '. Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
                                 //return date_format (date_create($data->punch_out->attendance_at), "g:i A");
                             }else{
-                                return Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('l, M d Y, g:i A');
+                                return '<a href="http://maps.google.com/maps?q='.$data->punch_out->latitude.','.$data->punch_out->longitude.'" target="_blanck"><i class="fas fa-globe-asia"></i></a> '. Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('l, M d Y, g:i A');
                                 //return date_format (date_create($data->punch_out->attendance_at), "l, M d Y, g:i A");
                             }
                             
@@ -568,7 +568,7 @@ class AttendanceController extends Controller
                     })
 
                     ->addColumn('punch_in', function (Attendance $data) {
-                        return Carbon::createFromFormat('Y-m-d H:i:s', $data->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
+                        return '<a href="http://maps.google.com/maps?q='.$data->latitude.','.$data->longitude.'" target="_blanck"><i class="fas fa-globe-asia"></i></a> '. Carbon::createFromFormat('Y-m-d H:i:s', $data->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
                         //return date_format(date_create($data->attendance_at), "g:i A");
                     })
 
@@ -577,10 +577,10 @@ class AttendanceController extends Controller
                             return 'To be continue..';
                         }else{
                             if(date_format (date_create($data->attendance_at), "l, M d Y") == date_format (date_create($data->punch_out->attendance_at), "l, M d Y")){
-                                return Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
+                                return '<a href="http://maps.google.com/maps?q='.$data->punch_out->latitude.','.$data->punch_out->longitude.'" target="_blanck"><i class="fas fa-globe-asia"></i></a> '. Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('g:i A');
                                 //return date_format (date_create($data->punch_out->attendance_at), "g:i A");
                             }else{
-                                return Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('l, M d Y, g:i A');
+                                return '<a href="http://maps.google.com/maps?q='.$data->punch_out->latitude.','.$data->punch_out->longitude.'" target="_blanck"><i class="fas fa-globe-asia"></i></a> '. Carbon::createFromFormat('Y-m-d H:i:s', $data->punch_out->attendance_at)->copy()->tz($data->creator->timezone->name)->format('l, M d Y, g:i A');
                                 //return date_format (date_create($data->punch_out->attendance_at), "l, M d Y, g:i A");
                             }
                             
