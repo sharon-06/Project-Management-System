@@ -20,7 +20,7 @@ class CreateLeavesTable extends Migration
             $table->unsignedBigInteger('branch_id')->index();
             $table->date('start_at')->comment('Leave Start Date')->useCurrent = true;
             $table->date('end_at')->comment('Leave End Date')->useCurrent = true;
-            $table->integer('leave_days');
+            $table->decimal('leave_days', 18, 2);
             $table->enum('leave_type', ['Annual', 'Sick', 'Hospitalisation', 'Maternity', 'Paternity', 'LOP'])->comment('Maternity Assigned to female only, Paternity Assigned to male only, LOP - Loss of Pay Leave (Unpaid)');
             $table->string('reason')->nullable();
             $table->text('description')->nullable();
